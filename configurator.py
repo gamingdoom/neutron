@@ -16,7 +16,7 @@ def main():
         appinfo["logoSvgFilePath"] = os.path.abspath(input("Please provide a path to a SVG of the application's logo (example: ../src/datcord.svg):\n"))
         while True:
             try:
-                appinfo["platforms"] = json.loads('{"array":' + input('List of lowercase platform names to build for (example: ["linux", "windows", "appimage", "flatpak"]):\n') + "}")["array"]
+                appinfo["platforms"] = json.loads('{"array":' + input('List of lowercase platform names to build for (example: ["linux", "appimage", "windows"]):\n') + "}")["array"]
                 break
             except json.JSONDecodeError:
                 print("Please enter the platforms in the same format as the example.")
