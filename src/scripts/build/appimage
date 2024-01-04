@@ -1,0 +1,12 @@
+#!/bin/sh
+
+cp -r src/packages/appimage/neutron.AppImage NEUTRON_INTERNAL_APP_NAME.AppImage
+mv NEUTRON_INTERNAL_APP_NAME.AppImage/neutron.desktop NEUTRON_INTERNAL_APP_NAME.AppImage/NEUTRON_INTERNAL_APP_NAME.desktop
+mkdir -p NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME
+tar --strip-components=1 -xvf  datcord.tar.bz2 -C NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/
+cp -r src/distribution/ NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/
+mv NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/distribution/policies-linux-appimage.json NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/distribution/policies.json 
+cp src/open-in-default-browser/open-in-default-browser NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/
+cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/
+
+ARCH=x86_64 appimagetool NEUTRON_INTERNAL_APP_NAME.AppImage/

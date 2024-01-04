@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=NEUTRON_APP_NAME
+Exec=NEUTRON_INTERNAL_APP_NAME
+Icon=icon256
+Type=Application
+Categories=Chat
+Comment=
+Path=
+Terminal=false
+StartupNotify=false
