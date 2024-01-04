@@ -1,6 +1,5 @@
 #!/bin/sh
 
-mkdir -p src/packages/appimage/neutron.AppImage/usr/share/icons
 cp -r src/packages/appimage/neutron.AppImage NEUTRON_INTERNAL_APP_NAME.AppImage
 mv NEUTRON_INTERNAL_APP_NAME.AppImage/neutron.desktop NEUTRON_INTERNAL_APP_NAME.AppImage/NEUTRON_INTERNAL_APP_NAME.desktop
 mkdir -p NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME
