@@ -24,7 +24,7 @@ fi
 cd mozilla-unified
 cp -r ../src/changed/* .
 cp ../src/mozconfig.windows mozconfig
-patch -p1 < ../src/mozilla_dirsFromLibreWolf.patch
+patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
 
 # Add cross compile target
 rustup target add x86_64-pc-windows-msvc
@@ -101,7 +101,7 @@ cp $mozbuild/win-cross/vs/Windows Kits/10/bin/10.0.19041.0/x64/fxc.exe $mozbuild
 ls $mozbuild
 ls $mozbuild/wine/bin
 
-patch -p1 < ../src/windows/fxc.patch
+patch -N -p1 < ../src/windows/fxc.patch
 
 ./mach configure
 ./mach build
