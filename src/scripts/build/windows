@@ -117,7 +117,7 @@ mv core NEUTRON_INTERNAL_APP_NAME
 rm setup.exe
 cd NEUTRON_INTERNAL_APP_NAME
 cd ..
-cp ../windows/NEUTRON_INTERNAL_APP_NAME.ico NEUTRON_INTERNAL_APP_NAME/
+cp ../src/windows/NEUTRON_INTERNAL_APP_NAME.ico NEUTRON_INTERNAL_APP_NAME/
 mkdir NEUTRON_INTERNAL_APP_NAME/distribution
 cp ../src/distribution/policies-windows.json NEUTRON_INTERNAL_APP_NAME/distribution/policies.json
 cp ../src/open-in-default-browser/open-in-default-browser.bat NEUTRON_INTERNAL_APP_NAME/ 
@@ -127,8 +127,8 @@ cp ../src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERN
 mkdir x86-ansi
 wget -q -O ./x86-ansi/nsProcess.dll https://sanghai.org/files/nsProcess.dll
 wget -q -O ./vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
-cp ../windows/setup.nsi .
-cp ../windows/NEUTRON_INTERNAL_APP_NAME.ico .
-cp ../windows/banner.bmp .
+cp ../src/windows/setup.nsi .
+cp ../src/windows/NEUTRON_INTERNAL_APP_NAME.ico .
+cp ../src/windows/banner.bmp .
 DISPLAY=:0 $mozbuild/wine/bin/wine $mozbuild/nsis/makensis.exe -V1 setup.nsi
 # Setup filename will be NEUTRON_INTERNAL_APP_NAMESetup-win64.exe
