@@ -26,7 +26,7 @@
   Neutron is an open-source tool for creating desktop applications based on web applications. Neutron uses Gecko/Firefox under the hood.
 
 # Usage
-  Neutron can be configured through the ``configurator.py`` configuration wizard. After being configured, ``config.json`` is generated in the build folder and ``build.py`` can be run to build your application.
+  Neutron can be configured through the ``configurator.py`` configuration wizard. After being configured, ``config.json`` is generated in the build folder and ``build.py`` can be run to build your application. One example of a Neutron application is [Datcord](https://github.com/gamingdoom/datcord).
   ## Making an application
   Currently, neutron applications can only be built on Linux, so you might have to use WSL.
   ```
