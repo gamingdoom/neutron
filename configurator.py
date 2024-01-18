@@ -61,6 +61,16 @@ def main(args: argparse.Namespace):
         if appinfo["openInDefaultBrowser"]:
             appinfo["extensionURLs"].append("NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION")
 
+        while True:
+            answer = input("Should the app run in the background when closed? This would make it deliver notifications even when closed. [y/n]\n")
+            if answer == ("y" or "Y"):
+                appinfo["runInBackground"] = True
+                break
+
+            elif answer == ("n" or "N"):
+                appinfo["runInBackground"] = False
+                break
+
     else:
         with open(args.config_file, "r") as f:
             appinfo = json.load(f)

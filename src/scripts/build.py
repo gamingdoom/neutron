@@ -110,8 +110,13 @@ def main():
     replaceTextInFile("src/mozconfig.windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/mozconfig.windows", "NEUTRON_APP_NAME", appinfo["appName"])
 
-    replaceTextInFile("src/launch-app", "if NEUTRON_OPEN_IN_DEFAULT_BROWSER", "if " + str(appinfo["openInDefaultBrowser"]).lower())
-    replaceTextInFile("src/launch-app", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
+    replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
+
+    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
+    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"] + "-neutron.exe")
+    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
 
     if appinfo["openInDefaultBrowser"]:
         replaceTextInFile("src/open-in-default-browser/open-in-default-browser-ext/replaceLinks.js", "NEUTRON_EXCLUDE_REGEX_PATTERN", appinfo["openInDefaultBrowserRegex"])
@@ -153,6 +158,18 @@ def main():
         if not build("open-in-default-browser"):
             print("Error building open-in-default-browser extension!")
             exit(1)
+
+    if "linux" in appinfo["platforms"]:
+        if not build("launch-app-linux"):
+            print("Error building launch-app-linux!")
+
+    if "windows" in appinfo["platforms"]:
+        if not build("launch-app-windows"):
+            print("Error building launch-app-windows!")
+
+    # If we build appimage but not linux
+    if "appimage" in appinfo["platforms"] and "linux" not in appinfo["platforms"]:
+        appinfo["platforms"].insert(appinfo["platforms"].index("appimage"), "linux")
 
     for component in appinfo["platforms"]:
         if not build(component):

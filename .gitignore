@@ -181,6 +181,7 @@ packages/flatpak/.flatpak-builder
 
 # Ignore build dir
 /build/
+/src/launch-app/build/
 
 # Ignore any configs
 config.json
