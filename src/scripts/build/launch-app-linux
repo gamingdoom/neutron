@@ -1,5 +1,6 @@
 #!/bin/sh
 
+rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	CC=gcc CXX=g++ cmake .. -DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" -DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER -DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND

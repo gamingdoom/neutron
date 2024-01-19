@@ -1,8 +1,9 @@
 #!/bin/sh
 
+rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
-	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ cmake .. -DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" -DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER -DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND
+	cmake -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_CXX_FLAGS="-Wno-cast-function-type -static -static-libgcc -static-libstdc++" -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ .. -DAPPLICATION_NAME=\"datcord-neutron.exe\" -DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER -DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND -DBOOST_IOSTREAMS_ENABLE_ZSTD=false
 	make -j
-	cp launch-app ../../launch-app.windows
+	cp launch-app.exe ../../launch-app.windows
 popd

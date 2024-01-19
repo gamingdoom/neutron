@@ -8,9 +8,14 @@
 #include <iostream>
 
 #include <boost/dll/runtime_symbol_info.hpp>
-#include <boost/process.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
+
+#ifndef __kernel_entry
+    #define __kernel_entry
+#endif
+#include <boost/process.hpp>
+
 
 #include "platform_specific.hpp"
 #include "running_guard.hpp"
@@ -55,7 +60,9 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
 
 int main(int argc, char *argv[]) {
 
-    std::signal(SIGINT, signal_handler);
+    #if defined(__linux__)
+        std::signal(SIGINT, signal_handler);
+    #endif
 
     auto instance_guard = running_guard::guard(APPLICATION_NAME);
 

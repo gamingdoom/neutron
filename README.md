@@ -30,7 +30,7 @@
   ## Making an application
   Currently, neutron applications can only be built on Linux, so you might have to use WSL.
   ```
-  git clone https://github.com/gamingdoom/neutron.git
+  git clone https://github.com/gamingdoom/neutron.git --recurse-submodules -j8
   cd neutron
   python configurator.py
   cd build
