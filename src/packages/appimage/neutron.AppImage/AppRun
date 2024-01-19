@@ -7,14 +7,8 @@ BIN="${HERE}/usr/lib/NEUTRON_INTERNAL_APP_NAME/launch-app"
 args=$@
 NUMBER_OF_ARGS="$#"
 
-#cd usr/bin/
-cp ${HERE}/usr/lib/NEUTRON_INTERNAL_APP_NAME/open-in-default-browser /tmp/open-in-default-browser
-
 if [ $# -eq 0 ] ; then
 	$BIN
 else
 	$BIN $@
 fi
-
-cd ${origLocation}
-rm /tmp/open-in-default-browser
