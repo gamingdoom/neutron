@@ -122,8 +122,7 @@ mkdir NEUTRON_INTERNAL_APP_NAME/distribution
 cp ../src/distribution/policies-windows.json NEUTRON_INTERNAL_APP_NAME/distribution/policies.json
 cp ../src/open-in-default-browser/open-in-default-browser.bat NEUTRON_INTERNAL_APP_NAME/ 
 cp ../src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME/ 
-mv NEUTRON_INTERNAL_APP_NAME/NEUTRON_INTERNAL_APP_NAME.exe NEUTRON_INTERNAL_APP_NAME/NEUTRON_INTERNAL_APP_NAME-neutron.exe
-cp ../src/launch-app.windows NEUTRON_INTERNAL_APP_NAME/NEUTRON_INTERNAL_APP_NAME.exe
+cp ../src/launch-app.windows NEUTRON_INTERNAL_APP_NAME/launch-NEUTRON_INTERNAL_APP_NAME.exe
 
 # Based on librewolf mk.py
 mkdir x86-ansi
