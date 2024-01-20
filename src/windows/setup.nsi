@@ -84,7 +84,7 @@ continue:
 
 	# Start Menu
 	createDirectory "$SMPROGRAMS\${COMPANYNAME}"
-	createShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\${PROGNAME}.exe" "" "$INSTDIR\${MUI_ICON}"
+	createShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\launch-${PROGNAME}.exe" "" "$INSTDIR\${MUI_ICON}"
 	createShortCut "$SMPROGRAMS\${COMPANYNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" ""
 
 	# Uninstaller 
