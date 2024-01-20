@@ -115,7 +115,7 @@ def main():
     replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
 
     replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
-    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"] + "-neutron.exe")
+    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
 
     replaceTextInFile("src/windows/app.rc", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
