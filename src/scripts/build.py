@@ -118,6 +118,9 @@ def main():
     replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"] + "-neutron.exe")
     replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
 
+    replaceTextInFile("src/windows/app.rc", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+
+
     if appinfo["openInDefaultBrowser"]:
         replaceTextInFile("src/open-in-default-browser/open-in-default-browser-ext/replaceLinks.js", "NEUTRON_EXCLUDE_REGEX_PATTERN", appinfo["openInDefaultBrowserRegex"])
     
