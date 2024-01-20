@@ -16,6 +16,9 @@
 #endif
 #include <boost/process.hpp>
 
+#if defined(WIN32)
+    #include <windows.h>
+#endif
 
 #include "platform_specific.hpp"
 #include "running_guard.hpp"
@@ -27,6 +30,12 @@ std::filesystem::path executablePath(){
 void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard::guard instance_guard){
     std::vector<std::string> args;
     std::vector<std::string> headlessArgs;
+
+    #if defined(WIN32)
+        args.push_back("-wait-for-browser");
+        headlessArgs.push_back("-wait-for-browser");
+    #endif
+
     headlessArgs.push_back("--headless");
     
     for (int i = 1; i < argc; i++){
@@ -35,6 +44,7 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
     }
 
     if (SHOULD_RUN_IN_BACKGROUND){
+        std::cout << "Running in background" << std::endl;
         while (true){
             boost::process::child app((appDir/APPLICATION_NAME).string(), args);
             app.wait();
@@ -96,3 +106,13 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
+#if defined(WIN32)
+    int WinMain(HINSTANCE hInstance,
+                HINSTANCE hPrevInstance, 
+                LPTSTR    lpCmdLine, 
+                int       cmdShow)
+        {
+            return main(__argc, __argv);
+        }
+#endif

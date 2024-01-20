@@ -15,7 +15,7 @@ add_subdirectory( extern/boost/ EXCLUDE_FROM_ALL )
 add_executable(launch-app ${sources} ${Boost_INCLUDE_DIRS} ${RES_PATH})
 
 # just for example add some compiler flags
-target_compile_options(launch-app PRIVATE -std=c++17 -Wall -Wextra -Wpedantic -Wno-deprecated-declarations -Wno-unused-parameter -Werror -g)
+target_compile_options(launch-app PRIVATE -std=c++17 -Wall -Wextra -Wno-deprecated-declarations -Wno-unused-parameter -Werror -g)
 
 target_compile_definitions(launch-app PRIVATE APPLICATION_NAME=${APPLICATION_NAME} SHOULD_OPEN_IN_DEFAULT_BROWSER=${SHOULD_OPEN_IN_DEFAULT_BROWSER} SHOULD_RUN_IN_BACKGROUND=${SHOULD_RUN_IN_BACKGROUND})
 
