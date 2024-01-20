@@ -31,6 +31,11 @@ pref("browser.startup.homepage",            "NEUTRON_APP_URL");
 pref("browser.shell.setDefaultPDFHandler", false);
 pref("browser.shell.setDefaultBrowserUserChoice", false);
 pref("browser.shell.checkDefaultBrowser", false);
+pref("browser.shell.skipDefaultBrowserCheckOnFirstRun", true);
+#ifdef XP_WIN
+  pref("default-browser-agent.enabled", false);
+#endif
+
 
 pref("browser.urlbar.suggest.bookmark",             false);
 pref("browser.urlbar.suggest.history",              false);
