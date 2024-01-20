@@ -36,7 +36,6 @@ def main():
 
     # Create branding
     shutil.copytree("src/branding-template", f"src/changed/browser/branding/{appinfo['internalAppName']}", dirs_exist_ok=True)
-    shutil.copytree("src/android-branding-template", f"src/changed/mobile/android/branding/{appinfo['internalAppName']}", dirs_exist_ok=True)
     
     # List of icons that need to be created    
     pngIcons = {
@@ -61,8 +60,6 @@ def main():
         f"src/packages/appimage/neutron.AppImage/.DirIcon": 256,
         f"src/packages/appimage/neutron.AppImage/icon256.png": 256,
         f"src/packages/appimage/neutron.AppImage/usr/share/icons/{appinfo['internalAppName']}256.png": 256,
-        f"src/changed/mobile/android/branding/{appinfo['internalAppName']}/content/favicon64.png": 64,
-        f"src/changed/mobile/android/branding/{appinfo['internalAppName']}/content/favicon32.png": 32,
     }
     icoIcons = {
         f"src/changed/browser/branding/{appinfo['internalAppName']}/firefox64.ico": [256,128,64,48,32,24,22,16],
@@ -107,19 +104,11 @@ def main():
     replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi", "NEUTRON_APP_NAME", appinfo["appName"])
     replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi", "NEUTRON_PROJECT_URL", appinfo["projectURL"])
     replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi", "NEUTRON_PROJECT_HELP_URL", appinfo["projectHelpURL"])
-
-    replaceTextInFile(f"src/changed/mobile/android/branding/{appinfo['internalAppName']}/locales/en-US/brand.properties", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile(f"src/changed/mobile/android/branding/{appinfo['internalAppName']}/locales/en-US/brand.properties", "NEUTRON_APP_NAME", appinfo["appName"])
-    
-    replaceTextInFile(f"src/changed/mobile/android/branding/{appinfo['internalAppName']}/locales/en-US/brand.ftl", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile(f"src/changed/mobile/android/branding/{appinfo['internalAppName']}/locales/en-US/brand.ftl", "NEUTRON_APP_NAME", appinfo["appName"])
     
     replaceTextInFile("src/mozconfig.linux", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/mozconfig.linux", "NEUTRON_APP_NAME", appinfo["appName"])
     replaceTextInFile("src/mozconfig.windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/mozconfig.windows", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/mozconfig.android", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mozconfig.android", "NEUTRON_APP_NAME", appinfo["appName"])
 
     replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
     replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
