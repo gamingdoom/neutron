@@ -1,2 +1,2 @@
 set arg=%*
-explorer.exe %arg:~5%
+start %arg:~5%
