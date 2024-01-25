@@ -7,13 +7,6 @@ pref("network.protocol-handler.external.open", true);
 pref("network.protocol-handler.warn-external.open", true);
 pref("network.protocol-handler.expose.open", false);
 
-// Other Settings
-#ifdef XP_WIN
-  pref("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0");
-#else
-  pref("general.useragent.override", "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0");
-#endif
-
 pref("permissions.default.camera", 1);
 pref("permissions.default.microphone", 1);
 
