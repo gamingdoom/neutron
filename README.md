@@ -32,6 +32,7 @@
   ```
   git clone https://github.com/gamingdoom/neutron.git --recurse-submodules -j8
   cd neutron
+  pip install -r requirements.txt
   python configurator.py
   cd build
   python build.py
