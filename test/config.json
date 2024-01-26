@@ -2,7 +2,7 @@
     "appName": "Neutron Test App",
     "internalAppName": "neutron-test-app",
     "url": "https://example.com",
-    "logoSvgFilePath": "../test/testlogo.svg",
+    "logoSvgFilePath": "../test/test.svg",
     "platforms": [
         "linux",
         "appimage",
