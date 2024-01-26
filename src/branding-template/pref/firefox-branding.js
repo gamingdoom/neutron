@@ -29,7 +29,6 @@ pref("browser.shell.skipDefaultBrowserCheckOnFirstRun", true);
   pref("default-browser-agent.enabled", false);
 #endif
 
-
 pref("browser.urlbar.suggest.bookmark",             false);
 pref("browser.urlbar.suggest.history",              false);
 pref("browser.urlbar.suggest.openpage",             false);
