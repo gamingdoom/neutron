@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 export mozbuild=~/.mozbuild
 export PATH="$PATH:$mozbuild/git-cinnabar"
 appDir=$PWD
