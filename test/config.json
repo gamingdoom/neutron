@@ -1,0 +1,20 @@
+{
+    "appName": "Neutron Test App",
+    "internalAppName": "neutron-test-app",
+    "url": "https://example.com",
+    "logoSvgFilePath": "../test/testlogo.svg",
+    "platforms": [
+        "linux",
+        "appimage",
+        "windows"
+    ],
+    "extensionURLs": [
+        "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION"
+    ],
+    "version": "0.5.0",
+    "projectURL": "https://github.com/gamingdoom/neutron",
+    "projectHelpURL": "https://github.com/gamingdoom/neutron/issues",
+    "openInDefaultBrowser": true,
+    "openInDefaultBrowserRegex": "http[s]?://example.com",
+    "runInBackground": true
+}
