@@ -31,7 +31,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
-          sudo apt install aria2
+          sudo apt install aria2 mingw-w64 alsa
 
       # Runs a set of commands using the runners shell
       - name: Configure and Build
