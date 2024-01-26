@@ -8,18 +8,6 @@ if [ ! -d $mozbuild ]; then
   mkdir $mozbuild
 fi
 
-if [ ! -d mozilla-unified ]; then
-	if command -v aria2c &> /dev/null; then
-		downloader=aria2c
-	else
-		downloader=curl
-	fi
-
-	$downloader https://hg.mozilla.org/releases/mozilla-release/archive/tip.zip -o mozilla-unified.zip
-	unzip mozilla-unified.zip -d unzipped-mozilla-unified
-	mv unzipped-mozilla-unified/* mozilla-unified
-fi
-
 cd mozilla-unified
 
 ./mach bootstrap

@@ -157,6 +157,10 @@ def main():
     replaceTextInFile("src/scripts/build/appimage", "NEUTRON_APP_NAME", appinfo["appName"])
 
     # Finally, lets start building.
+    if not build("download-firefox-source"):
+        print("Couldn't download the Firefox source code.")
+        exit(1)
+
     if appinfo["openInDefaultBrowser"]:
         if not build("open-in-default-browser"):
             print("Error building open-in-default-browser extension!")
@@ -165,10 +169,12 @@ def main():
     if "linux" in appinfo["platforms"]:
         if not build("launch-app-linux"):
             print("Error building launch-app-linux!")
+            exit(1)
 
     if "windows" in appinfo["platforms"]:
         if not build("launch-app-windows"):
             print("Error building launch-app-windows!")
+            exit(1)
 
     # If we build appimage but not linux
     if "appimage" in appinfo["platforms"] and "linux" not in appinfo["platforms"]:
