@@ -9,19 +9,21 @@ if [ ! -d $mozbuild ]; then
 fi
 
 if [ ! -d mozilla-unified ]; then
-  mkdir mozilla-unified
-  curl https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py -O
-  python3 bootstrap.py --vcs=git --no-interactive --application-choice=browser_artifact_mode
+	if command -v aria2c &> /dev/null; then
+		downloader=aria2c
+	else
+		downloader=curl
+	fi
+
+	$downloader https://hg.mozilla.org/releases/mozilla-release/archive/tip.zip -o mozilla-unified.zip
+	unzip mozilla-unified.zip -d unzipped-mozilla-unified
+	mv unzipped-mozilla-unified/* mozilla-unified
 fi
 
-if [ ! -d $mozbuild/git-cinnabar ]; then
-  git clone https://github.com/glandium/git-cinnabar.git $mozbuild/git-cinnabar
-  cd $mozbuild/git-cinnabar
-  make
-  cd $rootDir
-fi	
-
 cd mozilla-unified
+
+./mach bootstrap
+
 cp -r ../src/changed/* .
 cp ../src/mozconfig.linux mozconfig
 patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
