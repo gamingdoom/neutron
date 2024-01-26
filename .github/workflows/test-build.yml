@@ -31,7 +31,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
-          sudo apt install aria2 mingw-w64 alsa
+          sudo apt install aria2 mingw-w64 alsa libasound2-dev
           npm install web-ext -g
 
       # Runs a set of commands using the runners shell
