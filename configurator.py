@@ -24,13 +24,15 @@ def main(args: argparse.Namespace):
                 break
             except json.JSONDecodeError:
                 print("Please enter the platforms in the same format as the example.")
+        
+            answer = input("Should any external extensions be installed? [y/n]")
+            if answer == ("Y" or "y"):
+                try:
+                    appinfo["extensionURLs"] = json.loads('{"array":' + input('List URLs of extensions to install (example: ["https://example.com/extension.zip"]):\n') + "}")["array"]
+                except json.JSONDecodeError:
+                    appinfo["extensionURLs"] = []
 
-        try:
-            appinfo["extensionURLs"] = json.loads('{"array":' + input('List URLs of extensions to install (example: ["https://example.com/extension.zip"]):\n') + "}")["array"]
-        except json.JSONDecodeError:
-            appinfo["extensionURLs"] = []
-
-        appinfo["version"] = input("Enter the application version:\n")
+        appinfo["version"] = input("Enter the application version (example: 1.0.0):\n")
         appinfo["projectURL"] = input("Enter the URL to your project (example: https://github.com/gamingdoom/datcord):\n")
         appinfo["projectHelpURL"] = input("Enter the help URL for your project (example: https://github.com/gamingdoom/datcord/issues):\n")
 
