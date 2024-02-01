@@ -44,7 +44,6 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
     }
 
     if (SHOULD_RUN_IN_BACKGROUND){
-        std::cout << "Running in background" << std::endl;
         while (true){
             boost::process::child app((appDir/APPLICATION_NAME).string(), args);
             app.wait();
@@ -70,8 +69,16 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
 
 int main(int argc, char *argv[]) {
 
-    #if defined(__linux__)
-        std::signal(SIGINT, signal_handler);
+    // We need to cleanup the mutexes
+    std::signal(SIGINT, signal_handler);
+    std::signal(SIGABRT, signal_handler);
+    std::signal(SIGFPE, signal_handler);
+    std::signal(SIGILL, signal_handler);
+    std::signal(SIGSEGV, signal_handler);
+    std::signal(SIGTERM, signal_handler);
+
+    #ifndef _WIN32
+        std::signal(SIGKILL, signal_handler);
     #endif
 
     auto instance_guard = running_guard::guard(APPLICATION_NAME);
