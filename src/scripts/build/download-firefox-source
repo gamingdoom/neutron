@@ -1,13 +1,17 @@
 #!/bin/bash
 
 if [ ! -d mozilla-unified ]; then
-	if command -v aria2c &> /dev/null; then
-		downloader=aria2c
-	else
-		downloader=curl
-	fi
-
-	$downloader https://hg.mozilla.org/releases/mozilla-release/archive/tip.zip -o mozilla-unified.zip
-	unzip -q mozilla-unified.zip -d unzipped-mozilla-unified
-	mv unzipped-mozilla-unified/* mozilla-unified
+	mozbuild=~/.mozbuild
+	mkdir mozilla-unified
+	curl https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py -O
+	python3 bootstrap.py --vcs=git --no-interactive --application-choice=browser_artifact_mode
+	mkdir cinnabar
+	cd cinnabar
+	curl https://raw.githubusercontent.com/glandium/git-cinnabar/master/download.py -O download.py
+	python download.py
+	cd ..	
+	cd mozilla-unified
+	PATH="$(realpath ../cinnabar):$PATH" git cinnabar fetch --tags
+	git checkout $(git tag | grep -E "^FIREFOX_[0-9]*_[0-9]*(_[0-9]*)?_RELEASE" | sort -V | tail -n1)
+	cd ..
 fi

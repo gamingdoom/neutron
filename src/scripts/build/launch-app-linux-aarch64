@@ -1,0 +1,9 @@
+#!/bin/bash
+
+rm -rf src/launch-app/build
+mkdir src/launch-app/build
+pushd src/launch-app/build
+	CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ cmake -DCMAKE_SYSTEM_PROCESSOR=arm64 .. -DBOOST_CONTEXT_ARCHITECTURE=arm64 -DBOOST_CONTEXT_ABI=aapcs -DBOOST_CONTEXT_ASM_SUFFIX=.S -DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" -DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER -DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND
+	make -j
+	cp launch-app ../../launch-app.linux-aarch64
+popd

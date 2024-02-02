@@ -70,12 +70,12 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
 int main(int argc, char *argv[]) {
 
     // We need to cleanup the mutexes
-    std::signal(SIGINT, signal_handler);
-    std::signal(SIGABRT, signal_handler);
-    std::signal(SIGFPE, signal_handler);
-    std::signal(SIGILL, signal_handler);
-    std::signal(SIGSEGV, signal_handler);
-    std::signal(SIGTERM, signal_handler);
+    signal(SIGINT, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGFPE, signal_handler);
+    signal(SIGILL, signal_handler);
+    signal(SIGSEGV, signal_handler);
+    signal(SIGTERM, signal_handler);
 
     #ifndef _WIN32
         std::signal(SIGKILL, signal_handler);

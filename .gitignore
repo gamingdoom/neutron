@@ -185,6 +185,7 @@ packages/flatpak/.flatpak-builder
 # Launch app
 /src/launch-app/build/
 /src/launch-app/.cache/
+/src/launch-app/compile_flags.txt
 
 # Ignore any configs
 /config.json

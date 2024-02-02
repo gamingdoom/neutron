@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Build osxcross
+git clone https://github.com/tpoechtrager/osxcross.git --recurse-submodules
+cd osxcross
+wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz -O tarballs/MacOSX11.3.sdk.tar.xz
+export MACOSX_DEPLOYMENT_TARGET=10.15
+UNATTENDED=1 ./build.sh
+PATH="$(realpath target/bin):${PATH}"
+UNATTENDED=1 MACOSX_DEPLOYMENT_TARGET=11.3 osxcross-macports install boost181
+echo $(MACOSX_DEPLOYMENT_TARGET=11.3 osxcross-macports --ldflags boost181)
+boostLibPaths="$(realpath ../../../osxcross/target/macports/pkgs/opt/local/libexec/boost/1.81/lib/libboost_system-mt.dylib)"
+cd ..
+
+rm -rf src/launch-app/build
+mkdir src/launch-app/build
+pushd src/launch-app/build
+		x86_64-apple-darwin20.4-cmake \
+		-DCMAKE_C_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang) \
+		-DCMAKE_CXX_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang++) \
+		-DCMAKE_SYSTEM_PROCESSOR=x86_64 \
+		-DCMAKE_SIZEOF_VOID_P=8 \
+		-DCMAKE_SYSTEM_NAME=Darwin \
+		-DMY_BOOST_LIB_PATHS=$boostLibPaths \
+		-DMY_BOOST_INCLUDE_DIRS=$(realpath ../../../osxcross/target/macports/pkgs/opt/local/libexec/boost/1.81/include/) \
+		.. \
+		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
+		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
+		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND
+	make -j
+	cp launch-app ../../launch-app.mac-intel
+popd

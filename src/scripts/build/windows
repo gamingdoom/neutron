@@ -8,8 +8,6 @@ mkdir -p $mozbuild
 
 cd mozilla-unified
 
-./mach bootstrap
-
 cp -r ../src/changed/* .
 cp ../src/mozconfig.windows mozconfig
 patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
