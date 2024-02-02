@@ -4,6 +4,8 @@ mozbuild=~/.mozbuild
 export PATH="$PATH:$mozbuild/git-cinnabar"
 rootDir=$PWD
 
+rustup target add x86_64-apple-darwin
+
 cd mozilla-unified
 
 cp -r ../src/changed/* .
@@ -17,7 +19,7 @@ patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
 cd ..
 
 mkdir NEUTRON_INTERNAL_APP_NAME-darwin-x86_64
-cp -r mozilla-unified/obj-x86_64-apple-darwin/dist/*.app NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/
+cp -r mozilla-unified/obj-x86_64-apple-darwin/dist/*.app/* NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/
 cp -r src/distribution/ NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/
 mv NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/distribution/policies-linux.json NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/distribution/policies.json
 cp src/open-in-default-browser/open-in-default-browser NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/open-in-default-browser

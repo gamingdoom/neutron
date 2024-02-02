@@ -6,7 +6,9 @@
     "platforms": [
         "linux",
         "appimage",
-        "windows"
+        "windows",
+        "mac-arm",
+        "mac-intel"
     ],
     "extensionURLs": [
         "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION"
