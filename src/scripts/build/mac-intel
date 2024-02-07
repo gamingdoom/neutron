@@ -22,7 +22,7 @@ mkdir NEUTRON_INTERNAL_APP_NAME-darwin-x86_64
 cp -r mozilla-unified/obj-x86_64-apple-darwin/dist/*.app/* NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/
 cp -r src/distribution/ NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/
 mv NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/distribution/policies-linux.json NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/distribution/policies.json
-cp src/open-in-default-browser/open-in-default-browser NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/open-in-default-browser
+cp src/open-in-default-browser/open-in-default-browser-mac NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/open-in-default-browser
 cp src/launch-app.mac-intel NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/launch-app
 cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/open_in_default_browser-1.0.zip
 cp -f src/mac/Info-x86_64.plist NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Info.plist

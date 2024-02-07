@@ -66,6 +66,9 @@ def main():
         f"src/changed/browser/branding/{appinfo['internalAppName']}/firefox.ico": [256,128,64,48,32,24,22,16],
         f"src/windows/{appinfo['internalAppName']}.ico": [256,128,64,48,32,24,22,16]
     }
+    icnsIcons = {
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/firefox.icns": [512]
+    }
 
     for path, size in pngIcons.items():
         svg2png(url=appinfo["logoSvgFilePath"], write_to=path, output_height=size, output_width=size)
@@ -84,6 +87,12 @@ def main():
     # (164/2)-64=18 and (314/2)-64=93
     banner.paste(im, (18, 93), im)
     banner.save("src/windows/banner.bmp", bitmap_format="bmp")
+
+    for path, size in icnsIcons.items():
+        svg2png(url=appinfo["logoSvgFilePath"], write_to="temp.png", output_height=size, output_width=size)
+        im = Image.open("temp.png")
+        im.save(path)
+        os.remove("temp.png")
 
     # Replace placeholders with actual info
     replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/pref/firefox-branding.js", "NEUTRON_APP_URL", appinfo["url"])
@@ -186,6 +195,9 @@ def main():
     replaceTextInFile("src/scripts/build/appimage", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/scripts/build/appimage", "NEUTRON_APP_NAME", appinfo["appName"])
 
+    replaceTextInFile("src/scripts/build/appimage-aarch64", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/appimage-aarch64", "NEUTRON_APP_NAME", appinfo["appName"])
+
     # Finally, lets start building.
     if not build("download-firefox-source"):
         print("Couldn't download the Firefox source code.")
@@ -224,6 +236,9 @@ def main():
     # If we build appimage but not linux
     if "appimage" in appinfo["platforms"] and "linux" not in appinfo["platforms"]:
         appinfo["platforms"].insert(appinfo["platforms"].index("appimage"), "linux")
+
+    if "appimage-aarch64" in appinfo["platforms"] and "linux-aarch64" not in appinfo["platforms"]:
+        appinfo["platforms"].insert(appinfo["platforms"].index("appimage-aarch64"), "linux-aarch64")
 
     for component in appinfo["platforms"]:
         if not build(component):
