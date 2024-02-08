@@ -10,4 +10,4 @@ mv NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/distribu
 cp src/open-in-default-browser/open-in-default-browser NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/
 cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME.AppImage/usr/lib/NEUTRON_INTERNAL_APP_NAME/
 
-ARCH=aarch64 appimagetool NEUTRON_INTERNAL_APP_NAME.AppImage/
+ARCH=arm_aarch64 appimagetool NEUTRON_INTERNAL_APP_NAME.AppImage/
