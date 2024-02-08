@@ -67,7 +67,7 @@ def main():
         f"src/windows/{appinfo['internalAppName']}.ico": [256,128,64,48,32,24,22,16]
     }
     icnsIcons = {
-        f"src/changed/browser/branding/{appinfo['internalAppName']}/firefox.icns": [512]
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/firefox.icns": 512
     }
 
     for path, size in pngIcons.items():
