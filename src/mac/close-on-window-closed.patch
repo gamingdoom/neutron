@@ -6,7 +6,7 @@ index ca99497624e9a..cdcde046d42a3 100644
    return YES;
  }
  
-+ -(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSapplication*)sender
++ -(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)sender
 + {
 +   return YES;
 + }
