@@ -60,9 +60,6 @@ def main(args: argparse.Namespace):
                 appinfo["openInDefaultBrowser"] = False
                 break
 
-        if appinfo["openInDefaultBrowser"]:
-            appinfo["extensionURLs"].append("NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION")
-
         while True:
             answer = input("Should the app run in the background when closed? This would make it deliver notifications even when closed. [y/n]\n")
             if answer == ("y" or "Y"):

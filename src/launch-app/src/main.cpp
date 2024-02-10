@@ -22,6 +22,7 @@
 
 #include "platform_specific.hpp"
 #include "running_guard.hpp"
+#include "placeholders.hpp"
 
 std::filesystem::path executablePath(){
     return std::filesystem::path(boost::dll::program_location().string());
@@ -94,19 +95,6 @@ int main(int argc, char *argv[]) {
     if (SHOULD_OPEN_IN_DEFAULT_BROWSER){
         platform_specific::move_open_in_default_browser_script(appDir);
     }
-
-    // policies.json editing
-    std::ifstream ifs(appDir/"distribution/policies.json");
-    std::string policies( (std::istreambuf_iterator<char>(ifs) ),
-                       (std::istreambuf_iterator<char>()    ) );
-
-    ifs.close();
-
-    boost::replace_all(policies, "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION", (appDir/"open_in_default_browser-1.0.zip").string());
-
-    std::ofstream out(appDir/"distribution/policies.json");
-    out << policies;
-    out.close();
 
     // Run application
     runApp(argc, argv, appDir, instance_guard);

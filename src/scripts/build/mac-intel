@@ -12,6 +12,7 @@ cp -r ../src/changed/* .
 cp ../src/mozconfig.mac-intel mozconfig
 patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
 patch -N -p1 < ../src/mac/close-on-window-closed.patch
+patch -N -p1 < ../src/policies-file-command-line-argument.patch
 
 ./mach configure
 ./mach build
@@ -33,7 +34,10 @@ cp src/open-in-default-browser/open-in-default-browser-mac NEUTRON_INTERNAL_APP_
 cp src/launch-app.mac-intel NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/launch-app
 cp src/launch-app.mac-intel NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/MacOS/launch-app
 
-cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/open_in_default_browser-1.0.zip
+if ((NEUTRON_OPEN_IN_DEFAULT_BROWSER)); then
+	mkdir NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/distribution/extensions
+	cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/distribution/extensions/open-in-default-browser.xpi
+fi
 
 cp -f src/mac/Info-x86_64.plist NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Info.plist
 

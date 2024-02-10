@@ -2,6 +2,7 @@
 #include <filesystem>
 
 #include "platform_specific.hpp"
+#include "placeholders.hpp"
 
 #define OPEN_IN_DEFAULT_BROWSER_PATH "/tmp/open-in-default-browser"
 

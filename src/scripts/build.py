@@ -73,14 +73,12 @@ def main():
     for path, size in pngIcons.items():
         svg2png(url=appinfo["logoSvgFilePath"], write_to=path, output_height=size, output_width=size)
 
-    #with open(f"src/changed/browser/branding/{appinfo['internalAppName']}/default256.png", "r") as iconFile:
     im = Image.open(f"src/changed/browser/branding/{appinfo['internalAppName']}/default256.png")
 
     for path, sizes in icoIcons.items():
         im.save(path, sizes=[(x, x) for x in sizes], bitmap_format="bmp")
 
     # Make banner
-    #with open(f"src/changed/browser/branding/{appinfo['internalAppName']}/default128.png", "r") as iconFile:
     im = Image.open(f"src/changed/browser/branding/{appinfo['internalAppName']}/default128.png")
 
     banner = Image.new(size=(164, 314), color="white", mode="RGBA")
@@ -94,9 +92,12 @@ def main():
         im.save(path)
         os.remove("temp.png")
 
-    # Create the disk icon that shows up when you mount the dmg
-    im = Image.open(f"src/changed/browser/branding/{appinfo['internalAppName']}/disk.icns")
+    # # Create the disk icon that shows up when you mount the dmg
+    # im = Image.open(f"src/changed/browser/branding/{appinfo['internalAppName']}/disk.icns")
     
+    # I made changes to the config format so lets fix old configs.
+    if "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION" in appinfo["extensionURLs"]:
+        appinfo["extensionURLs"].remove("NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION")
 
     # Replace placeholders with actual info
     replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/pref/firefox-branding.js", "NEUTRON_APP_URL", appinfo["url"])
@@ -170,10 +171,7 @@ def main():
     replaceTextInFile("src/mozilla_dirsFromLibreWolf.patch", "NEUTRON_APP_NAME", appinfo["appName"])
 
     replaceTextInFile("src/distribution/policies-windows.json", "NEUTRON_APP_NAME", appinfo["appName"])
-    windowsExtUrls = appinfo["extensionURLs"].copy()
-    windowsExtUrls.remove("NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION")
-    windowsExtUrls.append(f"file:///C:\\Program%20Files\\{appinfo['appName'].replace(' ', '%20')}\\open_in_default_browser-1.0.zip")
-    replaceTextInFile("src/distribution/policies-windows.json", "NEUTRON_EXTENSION_URLS", str(windowsExtUrls).replace("'", '"'))
+    replaceTextInFile("src/distribution/policies-windows.json", "NEUTRON_EXTENSION_URLS", str(appinfo["extensionURLs"]).replace("'", '"'))
 
     replaceTextInFile("src/distribution/policies-linux.json", "NEUTRON_EXTENSION_URLS", str(appinfo["extensionURLs"]).replace("'", '"'))
 
@@ -182,16 +180,21 @@ def main():
     replaceTextInFile("src/distribution/policies-flatpak.json", "NEUTRON_EXTENSION_URLS", str(appinfo["extensionURLs"]).replace("'", '"'))
 
     replaceTextInFile("src/scripts/build/linux", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/linux", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
 
     replaceTextInFile("src/scripts/build/linux-aarch64", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/linux-aarch64", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
 
     replaceTextInFile("src/scripts/build/windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/windows", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
 
     replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_APP_NAME", appinfo["appName"])
+    replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
 
     replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_APP_NAME", appinfo["appName"])
+    replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
 
     replaceTextInFile("src/packages/appimage/neutron.AppImage/neutron.desktop", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/packages/appimage/neutron.AppImage/neutron.desktop", "NEUTRON_APP_NAME", appinfo["appName"])
