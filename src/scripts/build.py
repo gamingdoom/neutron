@@ -94,6 +94,10 @@ def main():
         im.save(path)
         os.remove("temp.png")
 
+    # Create the disk icon that shows up when you mount the dmg
+    im = Image.open(f"src/changed/browser/branding/{appinfo['internalAppName']}/disk.icns")
+    
+
     # Replace placeholders with actual info
     replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/pref/firefox-branding.js", "NEUTRON_APP_URL", appinfo["url"])
 
@@ -184,7 +188,10 @@ def main():
     replaceTextInFile("src/scripts/build/windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
 
     replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_APP_NAME", appinfo["appName"])
+
     replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+    replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_APP_NAME", appinfo["appName"])
 
     replaceTextInFile("src/packages/appimage/neutron.AppImage/neutron.desktop", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/packages/appimage/neutron.AppImage/neutron.desktop", "NEUTRON_APP_NAME", appinfo["appName"])

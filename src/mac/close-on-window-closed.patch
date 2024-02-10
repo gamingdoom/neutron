@@ -1,0 +1,16 @@
+diff --git a/toolkit/xre/MacApplicationDelegate.mm b/toolkit/xre/MacApplicationDelegate.mm
+index ca99497624e9a..cdcde046d42a3 100644
+--- a/toolkit/xre/MacApplicationDelegate.mm	
++++ b/toolkit/xre/MacApplicationDelegate.mm
+@@ -204,6 +204,11 @@ nsTArray<nsCString> TakeStartupURLs() { return std::move(StartupURLs()); }
+   return YES;
+ }
+ 
++ -(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSapplication*)sender
++ {
++   return YES;
++ }
++
+ // Create the menu that shows up in the Dock.
+ - (NSMenu*)applicationDockMenu:(NSApplication*)sender {
+   NS_OBJC_BEGIN_TRY_BLOCK_RETURN;
