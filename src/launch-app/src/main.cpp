@@ -1,8 +1,11 @@
 #include <chrono>
 #include <cstring>
+#include <exception>
 #include <fstream>
 #include <filesystem>
+#include <future>
 #include <memory>
+#include <ratio>
 #include <thread>
 #include <vector>
 #include <iostream>
@@ -10,6 +13,7 @@
 #include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/thread.hpp>
 
 #ifndef __kernel_entry
     #define __kernel_entry
@@ -28,7 +32,7 @@ std::filesystem::path executablePath(){
     return std::filesystem::path(boost::dll::program_location().string());
 }
 
-void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard::guard instance_guard){
+void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard::guard &instance_guard, bool &window_state, Tray::Tray *tray, bool &should_exit){
     std::vector<std::string> args;
     std::vector<std::string> headlessArgs;
 
@@ -46,13 +50,71 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
 
     if (SHOULD_RUN_IN_BACKGROUND){
         while (true){
+            if (should_exit)
+                return;
+
             boost::process::child app((appDir/APPLICATION_NAME).string(), args);
-            app.wait();
+            window_state = true;
+            if (tray)
+                tray->update();
+            while (true){
+                
+                if (should_exit){
+                    app.terminate();
+                    return;
+                }
+
+                if (window_state){
+                    if (app.wait_for(std::chrono::milliseconds(100))){
+                        window_state = false;
+                        if (tray)
+                            tray->update();
+                        printf("App Closed!\n");
+                        break;
+                    }
+                } else {
+                    printf("Stopping App\n");
+                    app.terminate();
+                    break;
+                }
+            }
 
             // On close, launch headless.
-            boost::process::child appHeadless((appDir/APPLICATION_NAME).string(), headlessArgs);
+            window_state = false;
+            if (tray)
+                tray->update();
 
-            instance_guard.waitForOtherProgram();
+            boost::process::child appHeadless((appDir/APPLICATION_NAME).string(), headlessArgs);
+            
+            printf("Started headless\n");
+
+            bool waiter_exited = false;
+
+            auto waiter = new boost::thread([&]{
+                instance_guard.waitForOtherProgram();
+                waiter_exited = true;
+            });
+
+            while (true){
+                if (should_exit){
+                    appHeadless.terminate();
+                    return;
+                }
+                if (waiter_exited){
+                    break;
+                }
+                if (window_state){
+                    break;
+                }
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            }
+            
+            try {
+                delete waiter;
+            } catch (std::exception &e){
+                std::cout << e.what();
+            }
+
             appHeadless.terminate();
         }
     } else {
@@ -91,13 +153,31 @@ int main(int argc, char *argv[]) {
 
     std::filesystem::path appDir = executablePath().parent_path();
 
+    bool window_state = true;
+    bool should_exit = false;
+
+    // Tray
+    Tray::Tray *tray = nullptr;
+    std::thread *tray_runner;
+    if (SHOULD_RUN_IN_BACKGROUND){
+        tray = platform_specific::setup_tray(appDir, instance_guard, window_state, should_exit);
+        tray_runner = new std::thread([&]{tray->run();});
+    }
+
+
     // Open in default browser stuff
     if (SHOULD_OPEN_IN_DEFAULT_BROWSER){
         platform_specific::move_open_in_default_browser_script(appDir);
     }
 
     // Run application
-    runApp(argc, argv, appDir, instance_guard);
+    runApp(argc, argv, appDir, instance_guard, window_state, tray, should_exit);
+
+    if (tray){
+        tray->exit();
+        delete tray;
+    }
+
 
     return 0;
 }

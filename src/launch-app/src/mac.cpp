@@ -3,6 +3,7 @@
 
 #include "platform_specific.hpp"
 #include "placeholders.hpp"
+#include "tray.hpp"
 
 #define OPEN_IN_DEFAULT_BROWSER_PATH "/tmp/open-in-default-browser"
 
@@ -20,4 +21,8 @@ void platform_specific::clean_open_in_default_browser_script(){
     return;
 }
 
+// Traypp doesn't support macos
+Tray::Tray *platform_specific::setup_tray(std::filesystem::path appDir, running_guard::guard &instance_guard, bool& window_state, bool &should_exit){
+    return nullptr;
+}
 #endif

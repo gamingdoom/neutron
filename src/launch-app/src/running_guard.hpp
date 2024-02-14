@@ -23,5 +23,6 @@ namespace running_guard
 
       public:
         void waitForOtherProgram();
+        void disarm();
     };
 }

@@ -15,7 +15,7 @@ namespace running_guard {
             guard::semaphore = new boost::interprocess::named_semaphore(boost::interprocess::open_only_t(), name.c_str());
             guard::otherProgramExists = true;
         }
-        //mutex.try_lock();
+
         if (otherProgramExists){
             guard::semaphore->post();
         }
@@ -28,6 +28,13 @@ namespace running_guard {
 
     void guard::waitForOtherProgram(){
         guard::semaphore->wait();
+        return;
+    }
+
+    void guard::disarm(){
+        while (!guard::semaphore->try_wait()){
+            guard::semaphore->post();
+        }
         return;
     }
 }
