@@ -11,7 +11,6 @@ cd mozilla-unified
 cp -r ../src/changed/* .
 cp ../src/mozconfig.windows mozconfig
 patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
-patch -N -p1 < ../src/policies-file-command-line-argument.patch
 
 # Add cross compile target
 rustup target add x86_64-pc-windows-msvc

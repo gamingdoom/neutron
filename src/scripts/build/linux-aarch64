@@ -9,7 +9,6 @@ cd mozilla-unified
 cp -r ../src/changed/* .
 cp ../src/mozconfig.linux-aarch64 mozconfig
 patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
-patch -N -p1 < ../src/policies-file-command-line-argument.patch
 
 ./mach configure
 ./mach build
