@@ -58,7 +58,7 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
             if (tray)
                 tray->update();
             while (true){
-                
+
                 if (should_exit){
                     app.terminate();
                     return;
@@ -175,9 +175,7 @@ int main(int argc, char *argv[]) {
 
     if (tray){
         tray->exit();
-        delete tray;
     }
-
 
     return 0;
 }

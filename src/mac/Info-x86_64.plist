@@ -4,7 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleDocumentTypes</key>
 	<key>CFBundleExecutable</key>
 	<string>launch-app</string>
 	<key>CFBundleGetInfoString</key>
