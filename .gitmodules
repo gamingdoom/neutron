@@ -3,4 +3,4 @@
 	url = https://github.com/boostorg/boost.git
 [submodule "src/launch-app/extern/traypp"]
 	path = src/launch-app/extern/traypp
-	url = https://github.com/Soundux/traypp
+	url = https://github.com/gamingdoom/traypp.git
