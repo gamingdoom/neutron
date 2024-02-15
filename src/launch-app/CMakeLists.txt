@@ -16,6 +16,10 @@ if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   add_subdirectory(extern/traypp EXCLUDE_FROM_ALL)
 endif()
 
+if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+  execute_process(COMMAND sed -i -e s/Windows.h/windows.h/ "${CMAKE_CURRENT_BINARY_DIR}/*")
+endif()
+
 add_executable(launch-app ${sources} ${Boost_INCLUDE_DIRS} ${RES_PATH})
 
 target_compile_options(launch-app PRIVATE -std=c++17 -Wall -Wextra -Wno-deprecated-declarations -Wno-unused-parameter -g)
