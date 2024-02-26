@@ -16,7 +16,7 @@ void platform_specific::clean_open_in_default_browser_script(){
 }
 
 Tray::Tray *platform_specific::setup_tray(std::filesystem::path appDir, running_guard::guard &instance_guard, bool& window_state, bool &should_exit){
-    Tray::Tray *tray = new Tray::Tray(APPLICATION_NAME, std::string(appDir/APPLICATION_NAME ".ico"));
+    Tray::Tray *tray = new Tray::Tray(APPLICATION_NAME, (appDir/(std::string(APPLICATION_NAME) + std::string(".ico"))).u8string());
     tray->addEntry(Tray::SyncedToggle("Show Window", window_state, NULL));
     tray->addEntry(Tray::Button("Exit", [&]{should_exit = true;}));
 

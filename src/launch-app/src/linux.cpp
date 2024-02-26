@@ -1,8 +1,8 @@
-#include <cstddef>
-#include <exception>
-#ifdef __linux__
+#if defined(__linux__)
 #include <filesystem>
 #include <thread>
+#include <cstddef>
+#include <exception>
 
 #include "platform_specific.hpp"
 #include "placeholders.hpp"
