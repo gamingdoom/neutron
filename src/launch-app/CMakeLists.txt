@@ -34,5 +34,6 @@ else()
   )
   target_include_directories(launch-app PRIVATE
     ${MY_BOOST_INCLUDE_DIRS}
+    extern/traypp/tray/include
   )
 endif()
