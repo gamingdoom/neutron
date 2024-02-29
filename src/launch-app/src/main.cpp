@@ -161,7 +161,9 @@ int main(int argc, char *argv[]) {
     std::thread *tray_runner;
     if (SHOULD_RUN_IN_BACKGROUND){
         tray = platform_specific::setup_tray(appDir, instance_guard, window_state, should_exit);
-        tray_runner = new std::thread([&]{tray->run();});
+        #ifndef __APPLE__
+            tray_runner = new std::thread([&]{tray->run();});
+        #endif
     }
 
 

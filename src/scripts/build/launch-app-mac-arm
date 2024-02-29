@@ -9,7 +9,8 @@ export MACOSX_DEPLOYMENT_TARGET=10.15
 PATH="$(realpath target/bin):${PATH}"
 UNATTENDED=1 MACOSX_DEPLOYMENT_TARGET=11.3 osxcross-macports install boost181
 echo $(MACOSX_DEPLOYMENT_TARGET=11.3 osxcross-macports --ldflags boost181)
-boostLibPaths="$(realpath ../../../osxcross/target/macports/pkgs/opt/local/libexec/boost/1.81/lib/libboost_system-mt.dylib)"
+boost_system_path="$(realpath target/macports/pkgs/opt/local/libexec/boost/1.81/lib/libboost_system-mt.dylib)"
+boost_thread_path="$(realpath target/macports/pkgs/opt/local/libexec/boost/1.81/lib/libboost_thread-mt.dylib)"
 cd ..
 
 rm -rf src/launch-app/build
@@ -21,7 +22,8 @@ pushd src/launch-app/build
 		-DCMAKE_SYSTEM_PROCESSOR=arm64 \
 		-DCMAKE_SIZEOF_VOID_P=8 \
 		-DCMAKE_SYSTEM_NAME=Darwin \
-		-DMY_BOOST_LIB_PATHS=$boostLibPaths \
+		-DBOOST_SYSTEM_LIB="${boost_system_path}" \
+		-DBOOST_THREAD_LIB="${boost_thread_path}" \
 		-DMY_BOOST_INCLUDE_DIRS=$(realpath ../../../osxcross/target/macports/pkgs/opt/local/libexec/boost/1.81/include/) \
 		.. \
 		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \

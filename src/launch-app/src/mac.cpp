@@ -3,7 +3,6 @@
 
 #include "platform_specific.hpp"
 #include "placeholders.hpp"
-#include "tray.hpp"
 
 #define OPEN_IN_DEFAULT_BROWSER_PATH "/tmp/open-in-default-browser"
 

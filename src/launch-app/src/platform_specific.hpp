@@ -1,7 +1,11 @@
 #pragma once
 
 #include "running_guard.hpp"
+#if defined(__APPLE__)
+#include "tray_mac.hpp"
+#else
 #include "tray.hpp"
+#endif
 
 #include <filesystem>
 
