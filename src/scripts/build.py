@@ -161,7 +161,7 @@ def main():
     replaceTextInFile("src/mac/Info-x86_64.plist", "NEUTRON_APP_VERSION", appinfo["version"])
 
     if appinfo["openInDefaultBrowser"]:
-        replaceTextInFile("src/open-in-default-browser/open-in-default-browser-ext/replaceLinks.js", "NEUTRON_EXCLUDE_REGEX_PATTERN", appinfo["openInDefaultBrowserRegex"])
+        replaceTextInFile("src/open-in-default-browser/open-in-default-browser-ext/extension/replaceLinks.js", "NEUTRON_EXCLUDE_REGEX_PATTERN", appinfo["openInDefaultBrowserRegex"])
     
     replaceTextInFile("src/windows/setup.nsi", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
     replaceTextInFile("src/windows/setup.nsi", "NEUTRON_APP_NAME", appinfo["appName"])

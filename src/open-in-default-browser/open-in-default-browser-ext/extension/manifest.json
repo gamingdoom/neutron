@@ -16,7 +16,7 @@
 
     "browser_specific_settings": {
         "gecko": {
-          "id": "open-in-default-browser",
+          "id": "open-in-default-browser@sanghai.org",
           "strict_min_version": "1.0"
         }
       },
