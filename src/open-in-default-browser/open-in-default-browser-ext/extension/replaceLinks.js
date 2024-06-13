@@ -1,6 +1,6 @@
 setInterval(changeLinks, 100)
 
-const exclude = new RegExp("http[s]?://discord.com")
+const exclude = new RegExp("NEUTRON_EXCLUDE_REGEX_PATTERN")
 
 function changeLinks() {
   // Get list of all links in the page
