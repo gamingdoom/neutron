@@ -1,0 +1,28 @@
+{
+    "ERR-LANGFILE-NOT-FOUND": "未找到语言文件，必须是以下之一：\n",
+    "INPUT-APPNAME": "请输入应用名称（示例：Datcord）：\n\t",
+    "INPUT-APP-URL": "请输入应用地址（示例：https://discord.com/app）：\n\t",
+    "INPUT-LOGOSVG-PATH": "请提供应用图标的 SVG 文件路径（示例：../src/datcord.svg）：\n\t",
+
+    "INPUT-BUILD-PLATFORMS": "要构建的平台名之列表（示例：[\"linux\", \"appimage\", \"windows\"]）：\n\t",
+    "ERR-INVALID-PLATFORM": "请输入与示例相同格式的平台名。",
+    "INPUT-IS-EXTENSION-INSTALLED": "是否需要安装外部扩展？[y/n]：\t",
+    "INPUT-EXTENSION-URLS": "列出要安装扩展的地址（示例：[\"https://example.com/extension.zip\"]）：\n\t",
+    "ERR-INVALID-EXTENSION-URL": "无法识别您的输入。使用默认（空）。",
+
+    "INPUT-VERSION": "请输入应用版本（示例：1.0.0）：\n\t",
+    "INPUT-PROJECT-URL": "请输入项目地址（示例：https://github.com/gamingdoom/datcord）：\n\t",
+    "INPUT-PROJECT-HELP-URL": "请输入项目帮助地址（示例：https://github.com/gamingdoom/datcord/issues）：\n\t",
+
+    "INPUT-ALLOW-OPEN-LINKS": "是否允许外部链接在默认浏览器中打开？[y/n]\t",
+    "ERR-MISSING-WEBEXT": "缺少 web-ext！需安装此软件以支持在默认浏览器中打开链接。使用默认（不支持）。",
+    "INPUT-NOT-OPEN-LINKS-REGEX": "请输入一个正则表达式，匹配不应在默认浏览器中打开的链接（示例：http[s]?://discord.com）：\n\t",
+    "ERR-REGEX-SELFREF": "提供的表达式匹配了本应用自身的地址！",
+    "ERR-INVALID-REGEX": "无效的正则表达式！",
+
+    "INPUT-IS-RUN-BACKGROUND": "关闭应用时是否应在后台运行？这将允许其发送后台通知。[y/n]\t",
+
+    "TIP-CLEAR-BUILD-FOLDER": "正在清空构建目录！",
+
+    "TIP-DONE": "完成！在 build 目录中运行 build.py 以进行构建。"
+}
