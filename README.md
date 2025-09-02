@@ -21,6 +21,8 @@
 </div>
 -->
 
+English | [简体中文](./README-SC.md) | [繁体中文](./README-TC.md)
+
 # About Neutron
 
   Neutron is an open-source tool for creating desktop applications based on web applications. Neutron uses Gecko/Firefox under the hood.
