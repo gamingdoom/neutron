@@ -1,14 +1,11 @@
 #!/bin/bash
 
-moz_include=${PWD}mozilla-unified/obj-aarch64-apple-darwin/dist/include
-xul_lib=${PWD}/NEUTRON_INTERNAL_APP_NAME-darwin-aarch64/XUL
-
 # Build osxcross
 git clone https://github.com/tpoechtrager/osxcross.git --recurse-submodules
 cd osxcross
 wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz -O tarballs/MacOSX11.3.sdk.tar.xz
-UNATTENDED=1 ./build.sh
 export MACOSX_DEPLOYMENT_TARGET=10.15
+UNATTENDED=1 ./build.sh
 PATH="$(realpath target/bin):${PATH}"
 UNATTENDED=1 MACOSX_DEPLOYMENT_TARGET=11.3 osxcross-macports install boost181
 echo $(MACOSX_DEPLOYMENT_TARGET=11.3 osxcross-macports --ldflags boost181)
@@ -32,8 +29,6 @@ pushd src/launch-app/build
 		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
 		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
-		-DMOZILLA_INCLUDE_DIR="${moz_include}" \
-		-DXUL_LIBRARY="${xul_lib}"
 
 	make -j
 	cp launch-app ../../launch-app.mac-arm

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-moz_include=${PWD}/mozilla-unified/obj-x86_64-pc-linux-gnu/dist/include
-xul_lib=${PWD}/NEUTRON_INTERNAL_APP_NAME-linux-x86_64/libxul.so
-
-pushd ${moz_include}/../../browser/app/
-extra_objects=$(cat NEUTRON_INTERNAL_APP_NAME.list | tail -n +2 | xargs readlink -f | tr '\n' ';')
-popd
-
 rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
@@ -16,8 +9,6 @@ pushd src/launch-app/build
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
 		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
 		-DMOZILLA_INCLUDE_DIR="${moz_include}" \
-		-DXUL_LIBRARY="${xul_lib}" \
-		-DEXTRA_OBJECTS="${extra_objects}"
 
 	make -j
 	cp launch-app ../../launch-app.linux

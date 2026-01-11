@@ -1,8 +1,5 @@
 #!/bin/bash
 
-moz_include=${PWD}/mozilla-unified/obj-x86_64-apple-darwin/dist/include
-xul_lib=${PWD}/NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/XUL
-
 # Build osxcross
 git clone https://github.com/tpoechtrager/osxcross.git --recurse-submodules
 cd osxcross
@@ -32,8 +29,6 @@ pushd src/launch-app/build
 		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
 		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
-		-DMOZILLA_INCLUDE_DIR="${moz_include}" \
-		-DXUL_LIBRARY="${xul_lib}"
 		
 	make -j
 	cp launch-app ../../launch-app.mac-intel
