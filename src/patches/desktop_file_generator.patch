@@ -1,5 +1,5 @@
---- python/mozbuild/mozbuild/repackaging/desktop_file.py.orig
-+++ python/mozbuild/mozbuild/repackaging/desktop_file.py
+--- a/python/mozbuild/mozbuild/repackaging/desktop_file.py
++++ b/python/mozbuild/mozbuild/repackaging/desktop_file.py
 @@ -187,57 +187,15 @@
  
  

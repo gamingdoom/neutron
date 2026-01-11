@@ -1,5 +1,5 @@
---- build/appini_header.py
-+++ build/appini_header.py
+--- a/build/appini_header.py
++++ b/build/appini_header.py
 @@ -57,6 +57,11 @@
      else:
          appdata["App:sourceurl"] = "NULL"
