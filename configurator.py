@@ -42,6 +42,14 @@ parser.add_argument(
     required=False,
 )
 
+parser.add_argument(
+    "-b",
+    "--build",
+    help="Build the application.",
+    required=False,
+    action="store_true",
+)
+
 def main(args: argparse.Namespace):
     if args.language:
         global language_string_dict
