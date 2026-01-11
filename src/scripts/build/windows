@@ -92,6 +92,7 @@ ls $mozbuild/wine/bin
 
 patch -N -p1 < ../src/windows/fxc.patch
 
+./mach bootstrap --no-interactive
 ./mach configure
 ./mach build
 ./mach package

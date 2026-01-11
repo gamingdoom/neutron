@@ -11,6 +11,7 @@ cd mozilla-unified
 cp -r ../src/changed/* .
 cp ../src/mozconfig.mac-arm mozconfig
 
+./mach bootstrap --no-interactive
 ./mach configure
 ./mach build 
 ./mach package
