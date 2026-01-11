@@ -15,9 +15,8 @@
     "INPUT-PROJECT-HELP-URL": "請輸入專案幫助地址（範例：https://github.com/gamingdoom/datcord/issues）：\n\t",
 
     "INPUT-ALLOW-OPEN-LINKS": "是否允許外部連結在預設瀏覽器中開啟？[y/n]\t",
-    "ERR-MISSING-WEBEXT": "缺少 web-ext！需安裝此軟體以支援在預設瀏覽器中開啟連結。使用預設（不允許）。",
+    "WARN-MISSING-WEBEXT": "缺少 web-ext！需安裝此軟體以支援在預設瀏覽器中開啟連結。",
     "INPUT-NOT-OPEN-LINKS-REGEX": "請輸入一個正則表達式，比對不應該在預設瀏覽器中開啟的連結（範例：http[s]?://discord.com）：\n\t",
-    "ERR-REGEX-SELFREF": "提供的表達式比對了本應用自身的地址！",
     "ERR-INVALID-REGEX": "無效的正則表達式！",
 
     "INPUT-IS-RUN-BACKGROUND": "關閉應用程式時是否應在背景執行？這將使其能發送背景通知。[y/n]\t",

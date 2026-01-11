@@ -8,6 +8,7 @@ import sys
 import argparse
 
 
+english_string_dict: dict = json.load(open("configurator.lang/en.json", "r", encoding="utf-8"))
 language_string_dict: dict = json.load(open("configurator.lang/en.json", "r", encoding="utf-8"))
 
 
@@ -15,8 +16,7 @@ def _(s: str) -> str:
     """
     i18n method
     """
-    return language_string_dict.get(s, s)
-
+    return language_string_dict.get(s, english_string_dict.get(s, s))
 
 parser = argparse.ArgumentParser(
     description="This program can guide you through the process of configuring Neutron."
@@ -41,7 +41,6 @@ parser.add_argument(
     help="Specify the language for prompt information.",
     required=False,
 )
-
 
 def main(args: argparse.Namespace):
     if args.language:
@@ -81,6 +80,8 @@ def main(args: argparse.Namespace):
                 appinfo["extensionURLs"] = []
 
         appinfo["version"] = input(_("INPUT-VERSION"))
+        appinfo["author"] = input(_("INPUT-AUTHOR"))
+        appinfo["projectDescription"] = input(_("INPUT-DESCRIPTION"))
         appinfo["projectURL"] = input(_("INPUT-PROJECT-URL"))
         appinfo["projectHelpURL"] = input(_("INPUT-PROJECT-HELP-URL"))
 
@@ -89,8 +90,7 @@ def main(args: argparse.Namespace):
             if answer in ("yes", "y"):
                 appinfo["openInDefaultBrowser"] = True
                 if not shutil.which("web-ext"):
-                    print(_("ERR-MISSING-WEBEXT"))
-                    break
+                    print(_("WARN-MISSING-WEBEXT"))
 
                 while True:
                     appinfo["openInDefaultBrowserRegex"] = input(
@@ -99,7 +99,7 @@ def main(args: argparse.Namespace):
                     try:
                         pattern = re.compile(appinfo["openInDefaultBrowserRegex"])
                         if not pattern.match(appinfo["url"]):
-                            print(_("ERR-REGEX-SELFREF"))
+                            print(_("ERR-REGEX-NOT-SELFREF"))
                             continue
                         break
                     except:

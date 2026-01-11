@@ -11,13 +11,15 @@
     "ERR-INVALID-EXTENSION-URL": "Cannot recognize your in-put. Use empty extensions.",
     
     "INPUT-VERSION": "Enter the application version (example: 1.0.0):\n\t",
+    "INPUT-AUTHOR": "Enter the author of the application (example: gamingdoom):\n\t",
+    "INPUT-DESCRIPTION": "Please enter a brief description of the application for packaging (example: A Discord client):\n\t",
     "INPUT-PROJECT-URL": "Enter the URL to your project (example: https://github.com/gamingdoom/datcord):\n\t",
     "INPUT-PROJECT-HELP-URL": "Enter the help URL for your project (example: https://github.com/gamingdoom/datcord/issues):\n\t",
 
     "INPUT-ALLOW-OPEN-LINKS": "Allow links to open in the default browser? [y/n]\t",
-    "ERR-MISSING-WEBEXT": "web-ext missing! It must be installed to build support for opening links in the default browser. Use the default (not allowing).",
+    "WARN-MISSING-WEBEXT": "Warning: web-ext missing! It must be installed to build support for opening links in the default browser.",
     "INPUT-NOT-OPEN-LINKS-REGEX": "Please enter a regular expression that matches links that shouldn't open in the default browser (example: http[s]?://discord.com):\n\t",
-    "ERR-REGEX-SELFREF": "The provided pattern matched the url of the application!",
+    "ERR-REGEX-NOT-SELFREF": "The provided pattern did not match the url of the application!",
     "ERR-INVALID-REGEX": "Invalid regular expression!",
 
     "INPUT-IS-RUN-BACKGROUND": "Should the app run in the background when closed? This would make it deliver notifications even when closed. [y/n]\t",
