@@ -3,31 +3,30 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
  @import url("chrome://browser/skin/browser-shared.css");
- @import url("chrome://browser/skin/browser-custom-colors.css");
- 
- @namespace html url("http://www.w3.org/1999/xhtml");
- 
- /* Neutron stuff. remove unwanted ui like tabs and url bar */
- #TabsToolbar { visibility: collapse !important; }
- #navigator-toolbox .browser-toolbar { height: 0px !important; min-height: 0px !important; }
+
+  /* Neutron stuff. remove unwanted ui like tabs and url bar */
+  #urlbar { visibility: collapse !important; }
+  #navigator-toolbox { visibility: collapse !important; }
 
  :root {
    --arrowpanel-field-background: light-dark(rgba(249, 249, 250, .3), rgba(12, 12, 13, .3));
  }
  
- #browser,
- #navigator-toolbox {
-   /* #browser and #navigator-toolbox must have relative positions so that the
-      latter can slide over the former in fullscreen mode. */
-   position: relative;
+ /* stylelint-disable-next-line media-query-no-invalid */
+ @media -moz-pref("browser.theme.native-theme") {
+   @media not (prefers-contrast) {
+     :root:not([lwtheme]) {
+       @media (prefers-color-scheme: light) {
+         --urlbar-box-bgcolor: #fafafa;
+       }
+       @media (prefers-color-scheme: dark) {
+         --tab-selected-bgcolor: color-mix(in srgb, -moz-dialog 75%, white);
+       }
+     }
+   }
  }
  
  /** Begin titlebar **/
- 
- #titlebar {
-   /* Centrally align content items vertically */
-   justify-content: center;
- }
  
  .titlebar-button {
    display: none;
@@ -130,7 +129,7 @@
  }
  
  /* stylelint-disable-next-line media-query-no-invalid */
- @media (-moz-bool-pref: "browser.urlbar.experimental.expandTextOnFocus") {
+ @media -moz-pref("browser.urlbar.experimental.expandTextOnFocus") {
    #urlbar[breakout-extend] {
      font-size: 1.36em;
    }
@@ -201,11 +200,8 @@
  
  /* ::::: tabbrowser ::::: */
  
- #tabbrowser-tabbox {
-   margin: 0;
- }
- 
- .tab-label {
+ .tab-label,
+ .tab-group-label {
    margin-block: 1px 0;
  }
  
@@ -226,7 +222,6 @@
  }
  
  .tabbrowser-tab {
-   font: message-box;
    border: none;
  
    /* FIXME: Are these styles really needed nowadays? */
@@ -235,7 +230,7 @@
      text-shadow: inherit;
  
      @media (prefers-color-scheme: light) {
-       &:not(:-moz-lwtheme) {
+       :root:not([lwtheme]) & {
          /* overriding tabbox.css */
          color: hsl(240, 5%, 5%);
        }
@@ -245,6 +240,7 @@
  
  #tabbrowser-tabs {
    /* overriding tabbox.css */
+   font: message-box;
    align-items: stretch;
    margin-bottom: 0;
    position: static;
@@ -267,3 +263,4 @@
    margin-inline-end: -10px;
    margin-top: -14px;
  }
+ 

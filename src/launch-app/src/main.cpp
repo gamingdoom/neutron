@@ -1,4 +1,5 @@
 #include <chrono>
+#include <cstdio>
 #include <cstring>
 #include <exception>
 #include <fstream>
@@ -25,14 +26,14 @@
 #endif
 
 #include "platform_specific.hpp"
-#include "running_guard.hpp"
+#include "instance_restrictor.hpp"
 #include "placeholders.hpp"
 
 std::filesystem::path executablePath(){
     return std::filesystem::path(boost::dll::program_location().string());
 }
 
-void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard::guard &instance_guard, bool &window_state, Tray::Tray *tray, bool &should_exit){
+void runApp(int argc, char *argv[], std::filesystem::path appDir, InstanceRestrictorImpl &instance_guard, bool &is_windowed, Tray::Tray *tray, bool &should_exit){
     std::vector<std::string> args;
     std::vector<std::string> headlessArgs;
 
@@ -48,77 +49,47 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, running_guard:
         headlessArgs.push_back(std::string(argv[i]));
     }
 
+    std::string application_executable = (appDir/APPLICATION_NAME).string();
+
+#if defined(_WIN32)
+    application_executable += ".exe";
+#endif
+
     if (SHOULD_RUN_IN_BACKGROUND){
-        while (true){
-            if (should_exit)
-                return;
-
-            boost::process::child app((appDir/APPLICATION_NAME).string(), args);
-            window_state = true;
-            if (tray)
-                tray->update();
-            while (true){
-
-                if (should_exit){
-                    app.terminate();
-                    return;
-                }
-
-                if (window_state){
-                    if (app.wait_for(std::chrono::milliseconds(100))){
-                        window_state = false;
-                        if (tray)
-                            tray->update();
-                        printf("App Closed!\n");
-                        break;
-                    }
-                } else {
-                    printf("Stopping App\n");
-                    app.terminate();
-                    break;
-                }
+        boost::process::child app(application_executable, args);
+        
+        is_windowed = true;
+        bool prev_is_windowed = is_windowed;
+        while (!should_exit) {
+            // Headless -> Window
+            if ((instance_guard.hasAnotherInstanceBeenLaunched() && !is_windowed) || (!prev_is_windowed && is_windowed)) {
+                printf("Going to window!\n");
+                is_windowed = true;
+                app.terminate();
+                app.wait();
+                app = boost::process::child(application_executable, args);
+                if (tray)
+                    tray->update();
             }
 
-            // On close, launch headless.
-            window_state = false;
-            if (tray)
-                tray->update();
+            // Window -> Headless
+            if ((!app.running() && is_windowed) || (prev_is_windowed && !is_windowed)) {
+                printf("Going to headless!\n");
+                is_windowed = false;
+                app.terminate();
+                app.wait();
+                app = boost::process::child(application_executable, headlessArgs);
 
-            boost::process::child appHeadless((appDir/APPLICATION_NAME).string(), headlessArgs);
-            
-            printf("Started headless\n");
-
-            bool waiter_exited = false;
-
-            auto waiter = new boost::thread([&]{
-                instance_guard.waitForOtherProgram();
-                waiter_exited = true;
-            });
-
-            while (true){
-                if (should_exit){
-                    appHeadless.terminate();
-                    return;
-                }
-                if (waiter_exited){
-                    break;
-                }
-                if (window_state){
-                    break;
-                }
-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            }
-            
-            try {
-                delete waiter;
-            } catch (std::exception &e){
-                std::cout << e.what();
+                if (tray)
+                    tray->update();
             }
 
-            appHeadless.terminate();
-        }
+            prev_is_windowed = is_windowed;
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));            
+		}
     } else {
-        boost::process::child app((appDir/APPLICATION_NAME).string(), args);
+        boost::process::child app(application_executable, args);
         app.wait();
     }
 
@@ -144,9 +115,9 @@ int main(int argc, char *argv[]) {
         std::signal(SIGKILL, signal_handler);
     #endif
 
-    auto instance_guard = running_guard::guard(APPLICATION_NAME);
+    auto instance_guard = InstanceRestrictorImpl();
 
-    if (instance_guard.otherProgramExists){
+    if (!instance_guard.mIsFirstInstance){
         sleep(1);
         return 0;
     }
@@ -156,16 +127,10 @@ int main(int argc, char *argv[]) {
     bool window_state = true;
     bool should_exit = false;
 
-    // Tray
     Tray::Tray *tray = nullptr;
-    std::thread *tray_runner;
     if (SHOULD_RUN_IN_BACKGROUND){
         tray = platform_specific::setup_tray(appDir, instance_guard, window_state, should_exit);
-        #ifndef __APPLE__
-            tray_runner = new std::thread([&]{tray->run();});
-        #endif
     }
-
 
     // Open in default browser stuff
     if (SHOULD_OPEN_IN_DEFAULT_BROWSER){
@@ -183,11 +148,11 @@ int main(int argc, char *argv[]) {
 }
 
 #if defined(WIN32)
-    int WinMain(HINSTANCE hInstance,
-                HINSTANCE hPrevInstance, 
-                LPTSTR    lpCmdLine, 
-                int       cmdShow)
-        {
-            return main(__argc, __argv);
-        }
+int WinMain(HINSTANCE hInstance,
+            HINSTANCE hPrevInstance, 
+            LPTSTR    lpCmdLine, 
+            int       cmdShow)
+    {
+        return main(__argc, __argv);
+    }
 #endif

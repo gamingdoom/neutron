@@ -1,0 +1,4 @@
+browser.jar:
+    builtin-addons/open-in-default-browser/replaceLinks.js (extension/replaceLinks.js)
+    builtin-addons/open-in-default-browser/manifest.json (extension/manifest.json)
+

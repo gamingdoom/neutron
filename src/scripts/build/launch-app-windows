@@ -1,5 +1,8 @@
 #!/bin/bash
 
+moz_include=${PWD}/mozilla-unified/obj-x86_64-pc-mingw32/dist/include
+xul_lib=${PWD}/work/NEUTRON_INTERNAL_APP_NAME/xul.dll
+
 pushd src/windows
 	x86_64-w64-mingw32-windres app.rc -O coff -o app.res
 popd
@@ -19,8 +22,14 @@ pushd src/launch-app/build
 		-DRES_PATH="../../windows/app.res" \
 		-D_WINDOWS= \
 		-DWIN32= \
-		-DBOOST_IOSTREAMS_ENABLE_ZSTD=false
+		-DBOOST_IOSTREAMS_ENABLE_ZSTD=false \
+		-DMOZILLA_INCLUDE_DIR="${moz_include}" \
+		-DXUL_LIBRARY="${xul_lib}"
 
 	make -j
 	cp launch-app.exe ../../launch-app.windows
+popd
+
+pushd work
+cp ../src/launch-app.windows NEUTRON_INTERNAL_APP_NAME/launch-NEUTRON_INTERNAL_APP_NAME.exe
 popd

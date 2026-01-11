@@ -1,0 +1,84 @@
+--- python/mozbuild/mozbuild/repackaging/desktop_file.py.orig
++++ python/mozbuild/mozbuild/repackaging/desktop_file.py
+@@ -187,57 +187,15 @@
+ 
+ 
+ def _generate_browser_desktop_entry(build_variables, localizations):
+-    mime_types = [
+-        "application/json",
+-        "application/pdf",
+-        "application/rdf+xml",
+-        "application/rss+xml",
+-        "application/x-xpinstall",
+-        "application/xhtml+xml",
+-        "application/xml",
+-        "audio/flac",
+-        "audio/ogg",
+-        "audio/webm",
+-        "image/avif",
+-        "image/gif",
+-        "image/jpeg",
+-        "image/png",
+-        "image/svg+xml",
+-        "image/webp",
+-        "text/html",
+-        "text/xml",
+-        "video/ogg",
+-        "video/webm",
+-        "x-scheme-handler/chrome",
+-        "x-scheme-handler/http",
+-        "x-scheme-handler/https",
+-        "x-scheme-handler/mailto",
+-    ]
++    mime_types = []
+ 
+     categories = [
+         "GNOME",
+         "GTK",
+         "Network",
+-        "WebBrowser",
+     ]
+ 
+-    actions = [
+-        {
+-            "name": "new-window",
+-            "message": "desktop-action-new-window-name",
+-            "command": f"{build_variables['PKG_NAME']} --new-window %u",
+-        },
+-        {
+-            "name": "new-private-window",
+-            "message": "desktop-action-new-private-window-name",
+-            "command": f"{build_variables['PKG_NAME']} --private-window %u",
+-        },
+-        {
+-            "name": "open-profile-manager",
+-            "message": "desktop-action-open-profile-manager",
+-            "command": f"{build_variables['PKG_NAME']} --ProfileManager",
+-        },
+-    ]
++    actions = []
+ 
+     desktop_entry = _desktop_entry_section(
+         "Desktop Entry",
+@@ -286,20 +244,7 @@
+             {
+                 "key": "StartupNotify",
+                 "value": "true",
+-            },
+-            {
+-                "key": "Actions",
+-                "value": _desktop_entry_list([action["name"] for action in actions]),
+-            },
+-            {"key": "Name", "value": "desktop-entry-name", "l10n": True},
+-            {"key": "Comment", "value": "desktop-entry-comment-1", "l10n": True},
+-            {"key": "GenericName", "value": "desktop-entry-generic-name", "l10n": True},
+-            {"key": "Keywords", "value": "desktop-entry-keywords", "l10n": True},
+-            {
+-                "key": "X-GNOME-FullName",
+-                "value": "desktop-entry-x-gnome-full-name-1",
+-                "l10n": True,
+-            },
++            }
+         ],
+         localizations,
+     )

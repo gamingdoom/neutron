@@ -1,11 +1,20 @@
 #!/bin/bash
 
-# pushd src/open-in-default-browser
-# make
-# popd
+if [ -d mozilla-unified/browser/extensions/open-in-default-browser ]; then
+    rm -r mozilla-unified/browser/extensions/open-in-default-browser
+fi
 
 cp -r src/open-in-default-browser/open-in-default-browser-ext mozilla-unified/browser/extensions/open-in-default-browser
 
 pushd mozilla-unified
-patch -N -p1 < ../src/open-in-default-browser/builtin-open-in-default-browser.patch
+if [ -f browser/extensions/moz.build.bak ]; then
+    cp browser/extensions/moz.build.bak browser/extensions/moz.build
+fi
+cp browser/extensions/moz.build browser/extensions/moz.build.bak
+
+echo "
+DIRS += [
+    \"open-in-default-browser\",
+]" >> browser/extensions/moz.build
+
 popd

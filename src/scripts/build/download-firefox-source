@@ -2,16 +2,20 @@
 
 if [ ! -d mozilla-unified ]; then
 	mozbuild=~/.mozbuild
-	mkdir mozilla-unified
-	curl https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py -O
+	curl https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py -LO
 	python3 bootstrap.py --vcs=git --no-interactive --application-choice=browser_artifact_mode
-	mkdir cinnabar
-	cd cinnabar
-	curl https://raw.githubusercontent.com/glandium/git-cinnabar/master/download.py -O download.py
-	python download.py
-	cd ..	
+
+	# they renamed mozilla-unified to firefox, so we need to fix that
+	mv firefox mozilla-unified
+
 	cd mozilla-unified
-	PATH="$(realpath ../cinnabar):$PATH" git cinnabar fetch --tags
 	git checkout $(git tag | grep -E "^FIREFOX_[0-9]*_[0-9]*(_[0-9]*)?_RELEASE" | sort -V | tail -n1)
+
+	echo "Applying universal patches"
+	for patch in ../src/patches/*.patch; do
+		patch -p1 < $patch
+	done
+	echo "Done applying universal patches"
+
 	cd ..
 fi

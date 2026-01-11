@@ -1,0 +1,7 @@
+#!/bin/bash
+
+mkdir "NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/NEUTRON_APP_NAME.app"
+mv NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents "NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/NEUTRON_APP_NAME.app/"
+
+rm NEUTRON_INTERNAL_APP_NAME-darwin-x86_64.dmg
+mozilla-unified/mach python -m mozbuild.action.make_dmg NEUTRON_INTERNAL_APP_NAME-darwin-x86_64 NEUTRON_INTERNAL_APP_NAME-darwin-x86_64.dmg --volume-name="NEUTRON_APP_NAME" --dsstore=src/branding-template/dsstore

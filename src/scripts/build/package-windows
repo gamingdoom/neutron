@@ -1,0 +1,15 @@
+#!/bin/bash
+
+pushd work
+
+# Based on librewolf mk.py
+mkdir x86-ansi
+wget -q -O ./x86-ansi/nsProcess.dll https://sanghai.org/files/nsProcess.dll
+wget -q -O ./vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
+cp ../src/windows/setup.nsi .
+cp ../src/windows/NEUTRON_INTERNAL_APP_NAME.ico .
+cp ../src/windows/banner.bmp .
+DISPLAY=:0 $mozbuild/wine/bin/wine $mozbuild/nsis/makensis.exe -V1 setup.nsi
+# Setup filename will be NEUTRON_INTERNAL_APP_NAMESetup-win64.exe
+
+popd

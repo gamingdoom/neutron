@@ -6,8 +6,10 @@
     "platforms": [
         "linux",
         "appimage",
+        "deb",
         "linux-aarch64",
         "appimage-aarch64",
+        "deb-aarch64",
         "windows",
         "mac-arm",
         "mac-intel"
@@ -15,7 +17,9 @@
     "extensionURLs": [
         "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION"
     ],
-    "version": "0.5.0",
+    "version": "1.0.0",
+    "author": "gamingdoom",
+    "projectDescription": "An test Neutron app.",
     "projectURL": "https://github.com/gamingdoom/neutron",
     "projectHelpURL": "https://github.com/gamingdoom/neutron/issues",
     "openInDefaultBrowser": true,

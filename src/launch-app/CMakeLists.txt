@@ -7,6 +7,8 @@
 cmake_minimum_required(VERSION 3.27.4)
 project(launch-app)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 file(GLOB_RECURSE sources      src/*.cpp src/*.hpp)
 
 set( BOOST_INCLUDE_LIBRARIES dll interprocess process algorithm thread )

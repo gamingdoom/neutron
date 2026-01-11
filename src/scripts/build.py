@@ -28,6 +28,12 @@ def build(component: str) -> bool:
         print(f"Build for {component} failed!")
         return False 
 
+
+def replace_placeholders(placeholder_files: list[str], placeholders: dict[str, str]) -> None:
+    for file in placeholder_files:
+        for placeholder, value in placeholders.items():
+            replaceTextInFile(file, placeholder, value)
+
 def main():
     with open("config.json", "r") as f:
         appinfo = json.load(f)
@@ -99,114 +105,90 @@ def main():
     if "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION" in appinfo["extensionURLs"]:
         appinfo["extensionURLs"].remove("NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION")
 
-    # Replace placeholders with actual info
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/pref/firefox-branding.js", "NEUTRON_APP_URL", appinfo["url"])
+    placeholder_files = [
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/pref/firefox-branding.js",
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/configure.sh",
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.properties",
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.dtd",
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.ftl",
+        f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi",
+        
+        "src/changed/build/application.ini.in",
 
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/configure.sh", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/configure.sh", "NEUTRON_APP_NAME", appinfo["appName"])
+        "src/mozconfig.linux",
+        "src/mozconfig.linux-aarch64",
+        "src/mozconfig.windows",
+        "src/mozconfig.mac-arm",
+        "src/mozconfig.mac-intel",
 
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.properties", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.properties", "NEUTRON_APP_NAME", appinfo["appName"])
-    
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.dtd", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.dtd", "NEUTRON_APP_NAME", appinfo["appName"])
-    
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.ftl", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/locales/en-US/brand.ftl", "NEUTRON_APP_NAME", appinfo["appName"])
+        "src/scripts/build/launch-app-linux",
+        "src/scripts/build/launch-app-linux-aarch64",
+        "src/scripts/build/launch-app-windows",
+        "src/scripts/build/launch-app-mac-arm",
+        "src/scripts/build/launch-app-mac-intel",
 
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi", "NEUTRON_PROJECT_URL", appinfo["projectURL"])
-    replaceTextInFile(f"src/changed/browser/branding/{appinfo['internalAppName']}/branding.nsi", "NEUTRON_PROJECT_HELP_URL", appinfo["projectHelpURL"])
-    
-    replaceTextInFile("src/mozconfig.linux", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mozconfig.linux", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/mozconfig.linux-aarch64", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mozconfig.linux-aarch64", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/mozconfig.windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mozconfig.windows", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/mozconfig.mac-arm", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mozconfig.mac-arm", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/mozconfig.mac-intel", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mozconfig.mac-intel", "NEUTRON_APP_NAME", appinfo["appName"])
+        "src/windows/app.rc",
+        "src/windows/setup.nsi",
 
-    replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
-    replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/launch-app-linux", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
+        "src/mac/Info-aarch64.plist",
+        "src/mac/Info-x86_64.plist",
 
-    replaceTextInFile("src/scripts/build/launch-app-linux-aarch64", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
-    replaceTextInFile("src/scripts/build/launch-app-linux-aarch64", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/launch-app-linux-aarch64", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
+        "src/mozilla_dirsFromLibreWolf.patch",
 
-    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
-    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/launch-app-windows", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
+        "src/distribution/policies-windows.json",
+        "src/distribution/policies-linux.json",
+        "src/distribution/policies-linux-appimage.json",
+        "src/distribution/policies-flatpak.json",
 
-    replaceTextInFile("src/scripts/build/launch-app-mac-arm", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
-    replaceTextInFile("src/scripts/build/launch-app-mac-arm", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/launch-app-mac-arm", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
+        "src/scripts/build/linux",
+        "src/scripts/build/linux-aarch64",
+        "src/scripts/build/windows",
+        "src/scripts/build/mac-arm",
+        "src/scripts/build/mac-intel",
 
-    replaceTextInFile("src/scripts/build/launch-app-mac-intel", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(appinfo["openInDefaultBrowser"]).lower())
-    replaceTextInFile("src/scripts/build/launch-app-mac-intel", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/launch-app-mac-intel", "NEUTRON_SHOULD_RUN_IN_BACKGROUND", str(appinfo["runInBackground"]).lower())
+        "src/scripts/build/launch-app-linux",
+        "src/scripts/build/launch-app-linux-aarch64",
+        "src/scripts/build/launch-app-windows",
+        "src/scripts/build/launch-app-mac-arm",
+        "src/scripts/build/launch-app-mac-intel",
 
-    replaceTextInFile("src/windows/app.rc", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
+        "src/packages/appimage/neutron.AppImage/neutron.desktop",
+        "src/packages/appimage/neutron.AppImage/AppRun",
 
-    replaceTextInFile("src/mac/Info-aarch64.plist", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mac/Info-aarch64.plist", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/mac/Info-aarch64.plist", "NEUTRON_APP_VERSION", appinfo["version"])
+        "src/packages/debian/install.in",
+        "src/packages/debian/control.in",
+        "src/packages/debian/distribution.ini",
 
-    replaceTextInFile("src/mac/Info-x86_64.plist", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mac/Info-x86_64.plist", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/mac/Info-x86_64.plist", "NEUTRON_APP_VERSION", appinfo["version"])
+        "src/scripts/build/package-linux",
+        "src/scripts/build/package-appimage",
+        "src/scripts/build/package-appimage-aarch64",
+        "src/scripts/build/package-deb",
+        "src/scripts/build/package-deb-aarch64",
+        "src/scripts/build/package-windows",
+        "src/scripts/build/package-mac-arm",
+        "src/scripts/build/package-mac-intel",
+    ]
+
+    placeholders = {
+        "NEUTRON_INTERNAL_APP_NAME": appinfo["internalAppName"],
+        "NEUTRON_APP_NAME": appinfo["appName"],
+        "NEUTRON_APP_URL": appinfo["url"],
+        "NEUTRON_PROJECT_URL": appinfo["projectURL"],
+        "NEUTRON_PROJECT_HELP_URL": appinfo["projectHelpURL"],
+        "NEUTRON_OPEN_IN_DEFAULT_BROWSER": str(appinfo["openInDefaultBrowser"]).lower(),
+        "NEUTRON_SHOULD_RUN_IN_BACKGROUND": str(appinfo["runInBackground"]).lower(),
+        "NEUTRON_APP_VERSION": appinfo["version"],
+        "NEUTRON_EXTENSION_URLS": str(appinfo["extensionURLs"]).replace("'", '"'),
+        "NEUTRON_SHOULD_OPEN_IN_DEFAULT_BROWSER": str(int(appinfo["openInDefaultBrowser"])),
+        "NEUTRON_AUTHOR": appinfo["author"],
+        "NEUTRON_PROJECT_DESCRIPTION": appinfo["projectDescription"],
+    }
 
     if appinfo["openInDefaultBrowser"]:
-        replaceTextInFile("src/open-in-default-browser/open-in-default-browser-ext/extension/replaceLinks.js", "NEUTRON_EXCLUDE_REGEX_PATTERN", appinfo["openInDefaultBrowserRegex"])
-    
-    replaceTextInFile("src/windows/setup.nsi", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/windows/setup.nsi", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/windows/setup.nsi", "NEUTRON_APP_VERSION", appinfo["version"])
+        placeholder_files.append("src/open-in-default-browser/open-in-default-browser-ext/extension/replaceLinks.js")
+        placeholders["NEUTRON_EXCLUDE_REGEX_PATTERN"] = appinfo["openInDefaultBrowserRegex"]
 
-    replaceTextInFile("src/mozilla_dirsFromLibreWolf.patch", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/mozilla_dirsFromLibreWolf.patch", "NEUTRON_APP_NAME", appinfo["appName"])
-
-    replaceTextInFile("src/distribution/policies-windows.json", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/distribution/policies-windows.json", "NEUTRON_EXTENSION_URLS", str(appinfo["extensionURLs"]).replace("'", '"'))
-
-    replaceTextInFile("src/distribution/policies-linux.json", "NEUTRON_EXTENSION_URLS", str(appinfo["extensionURLs"]).replace("'", '"'))
-
-    replaceTextInFile("src/distribution/policies-linux-appimage.json", "NEUTRON_EXTENSION_URLS", str(appinfo["extensionURLs"]).replace("'", '"'))
-
-    replaceTextInFile("src/distribution/policies-flatpak.json", "NEUTRON_EXTENSION_URLS", str(appinfo["extensionURLs"]).replace("'", '"'))
-
-    replaceTextInFile("src/scripts/build/linux", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/linux", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
-
-    replaceTextInFile("src/scripts/build/linux-aarch64", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/linux-aarch64", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
-
-    replaceTextInFile("src/scripts/build/windows", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/windows", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
-
-    replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/scripts/build/mac-arm", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
-
-    replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_APP_NAME", appinfo["appName"])
-    replaceTextInFile("src/scripts/build/mac-intel", "NEUTRON_OPEN_IN_DEFAULT_BROWSER", str(int(appinfo["runInBackground"])))
-
-    replaceTextInFile("src/packages/appimage/neutron.AppImage/neutron.desktop", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/packages/appimage/neutron.AppImage/neutron.desktop", "NEUTRON_APP_NAME", appinfo["appName"])
-
-    replaceTextInFile("src/packages/appimage/neutron.AppImage/AppRun", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/packages/appimage/neutron.AppImage/AppRun", "NEUTRON_APP_NAME", appinfo["appName"])
-
-    replaceTextInFile("src/scripts/build/appimage", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/appimage", "NEUTRON_APP_NAME", appinfo["appName"])
-
-    replaceTextInFile("src/scripts/build/appimage-aarch64", "NEUTRON_INTERNAL_APP_NAME", appinfo["internalAppName"])
-    replaceTextInFile("src/scripts/build/appimage-aarch64", "NEUTRON_APP_NAME", appinfo["appName"])
+    replace_placeholders(placeholder_files, placeholders)
 
     # Finally, lets start building.
     if not build("download-firefox-source"):
@@ -218,39 +200,29 @@ def main():
             print("Error building open-in-default-browser extension!")
             exit(1)
 
-    if "linux" in appinfo["platforms"]:
-        if not build("launch-app-linux"):
-            print("Error building launch-app-linux!")
-            exit(1)
+    buildable_platforms = []
+    for platform in appinfo["platforms"]:
+        if platform == "appimage":
+            buildable_platforms.append("linux")
+            buildable_platforms.append("package-appimage")
+        elif platform == "appimage-aarch64":
+            buildable_platforms.append("linux-aarch64")
+            buildable_platforms.append("package-appimage-aarch64")
+        elif platform == "deb":
+            buildable_platforms.append("linux")
+            buildable_platforms.append("package-deb")
+        elif platform == "deb-aarch64":
+            buildable_platforms.append("linux-aarch64")
+            buildable_platforms.append("package-deb-aarch64")
+        else:
+            buildable_platforms.append(platform)
+            buildable_platforms.append(f"launch-app-{platform}")
+            buildable_platforms.append(f"package-{platform}")
 
-    if "linux-aarch64" in appinfo["platforms"]:
-        if not build("launch-app-linux-aarch64"):
-            print("Error building launch-app-linux-aarch64!")
-            exit(1)
+    buildable_platforms_dedup = []
+    [buildable_platforms_dedup.append(x) for x in buildable_platforms if x not in buildable_platforms_dedup]
 
-    if "windows" in appinfo["platforms"]:
-        if not build("launch-app-windows"):
-            print("Error building launch-app-windows!")
-            exit(1)
-
-    if "mac-arm" in appinfo["platforms"]:
-        if not build("launch-app-mac-arm"):
-            print("Error building launch-app-mac-arm")
-            exit(1)
-
-    if "mac-intel" in appinfo["platforms"]:
-        if not build("launch-app-mac-intel"):
-            print("Error building launch-app-mac-intel")
-            exit(1)
-            
-    # If we build appimage but not linux
-    if "appimage" in appinfo["platforms"] and "linux" not in appinfo["platforms"]:
-        appinfo["platforms"].insert(appinfo["platforms"].index("appimage"), "linux")
-
-    if "appimage-aarch64" in appinfo["platforms"] and "linux-aarch64" not in appinfo["platforms"]:
-        appinfo["platforms"].insert(appinfo["platforms"].index("appimage-aarch64"), "linux-aarch64")
-
-    for component in appinfo["platforms"]:
+    for component in buildable_platforms_dedup:
         if not build(component):
             print(f"Error building component {component}!")
             exit(1)

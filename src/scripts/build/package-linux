@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tar -cjf NEUTRON_INTERNAL_APP_NAME-linux-x86_64.tar.bz2 NEUTRON_INTERNAL_APP_NAME-linux-x86_64 

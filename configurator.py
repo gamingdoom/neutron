@@ -3,6 +3,7 @@ import json
 import re
 import os
 import shutil
+import subprocess
 import sys
 import argparse
 
@@ -43,7 +44,6 @@ parser.add_argument(
 
 
 def main(args: argparse.Namespace):
-
     if args.language:
         global language_string_dict
 
@@ -136,11 +136,21 @@ def main(args: argparse.Namespace):
 
     with open("build/config.json", "w") as f:
         json.dump(appinfo, f, indent=4)
+    
+    if args.build:
+        os.chdir("build")
 
-    print(_("TIP-DONE"))
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("build", "./build.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        module.main()
+        
+        os.chdir("..")
+    else:
+            print(_("TIP-DONE"))
 
     return
-
 
 if __name__ == "__main__":
     args = parser.parse_args()

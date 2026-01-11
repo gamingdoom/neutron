@@ -1,0 +1,11 @@
+Source: ${PKG_NAME}
+Maintainer: NEUTRON_AUTHOR
+Priority: optional
+Section: web
+Build-Depends: debhelper (>= 9)
+
+Package: ${PKG_NAME}
+Architecture: ${ARCH_NAME}
+Depends: ${DEPENDS}
+Provides: gnome-www-browser, www-browser
+Description: NEUTRON_PROJECT_DESCRIPTION

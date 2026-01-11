@@ -7,9 +7,7 @@ ac_add_options --with-branding=browser/branding/NEUTRON_INTERNAL_APP_NAME
 ac_add_options --with-unsigned-addon-scopes=app,system
 export MOZ_REQUIRE_SIGNING=
 
-export MOZ_APP_NAME=NEUTRON_INTERNAL_APP_NAME
-export MOZ_APP_BASENAME=NEUTRON_APP_NAME
-export MOZ_APP_PROFILE=NEUTRON_INTERNAL_APP_NAME
-export MOZ_APP_VENDOR=NEUTRON_APP_NAME
-export MOZ_APP_DISPLAYNAME=NEUTRON_APP_NAME
-export MOZ_APP_UA_NAME=Firefox
+ac_add_options --disable-debug
+ac_add_options --enable-optimize
+
+export MOZ_UPDATER=0

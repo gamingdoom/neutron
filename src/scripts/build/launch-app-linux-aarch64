@@ -1,8 +1,25 @@
 #!/bin/bash
 
+moz_include=${PWD}/mozilla-unified/obj-aarch64-unknown-linux-gnu/dist/include
+xul_lib=${PWD}/NEUTRON_INTERNAL_APP_NAME-linux-aarch64/libxul.so
+
 rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
-	CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ cmake -DCMAKE_CXX_FLAGS="-fpermissive" -DCMAKE_SYSTEM_PROCESSOR=aarch64 .. -DBOOST_CONTEXT_ARCHITECTURE=arm64 -DBOOST_CONTEXT_ABI=aapcs -DBOOST_CONTEXT_ASM_SUFFIX=.S -DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" -DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER -DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND
+	CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ cmake \
+		-DCMAKE_CXX_FLAGS="-fpermissive" \
+		-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+		.. \
+		-DBOOST_CONTEXT_ARCHITECTURE=arm64 \
+		-DBOOST_CONTEXT_ABI=aapcs \
+		-DBOOST_CONTEXT_ASM_SUFFIX=.S \
+		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
+		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
+		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
+		-DMOZILLA_INCLUDE_DIR="${moz_include}" \
+		-DXUL_LIBRARY="${xul_lib}"
+
 	cp launch-app ../../launch-app.linux-aarch64
 popd
+
+cp src/launch-app.linux NEUTRON_INTERNAL_APP_NAME-linux-aarch64/launch-app

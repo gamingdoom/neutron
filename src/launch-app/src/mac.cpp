@@ -1,6 +1,7 @@
 #ifdef __APPLE__
 #include <filesystem>
 
+#include "instance_restrictor.hpp"
 #include "platform_specific.hpp"
 #include "placeholders.hpp"
 
@@ -21,7 +22,7 @@ void platform_specific::clean_open_in_default_browser_script(){
 }
 
 // Traypp doesn't support macos
-Tray::Tray *platform_specific::setup_tray(std::filesystem::path appDir, running_guard::guard &instance_guard, bool& window_state, bool &should_exit){
+Tray::Tray *platform_specific::setup_tray(std::filesystem::path appDir, InstanceRestrictorImpl &instance_guard, bool& window_state, bool &should_exit){
     return nullptr;
 }
 #endif

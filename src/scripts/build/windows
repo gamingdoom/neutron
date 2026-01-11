@@ -10,7 +10,6 @@ cd mozilla-unified
 
 cp -r ../src/changed/* .
 cp ../src/mozconfig.windows mozconfig
-patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
 
 # Add cross compile target
 rustup target add x86_64-pc-windows-msvc
@@ -112,19 +111,9 @@ mkdir NEUTRON_INTERNAL_APP_NAME/distribution
 cp ../src/distribution/policies-windows.json NEUTRON_INTERNAL_APP_NAME/distribution/policies.json
 cp ../src/open-in-default-browser/open-in-default-browser.bat NEUTRON_INTERNAL_APP_NAME/ 
 
-if ((NEUTRON_OPEN_IN_DEFAULT_BROWSER)); then
-	mkdir NEUTRON_INTERNAL_APP_NAME/distribution/extensions
-	cp ../src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME/distribution/extensions/open-in-default-browser.xpi
-fi
+# if ((NEUTRON_SHOULD_OPEN_IN_DEFAULT_BROWSER)); then
+# 	mkdir NEUTRON_INTERNAL_APP_NAME/distribution/extensions
+# 	cp ../src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME/distribution/extensions/open-in-default-browser.xpi
+# fi
 
-cp ../src/launch-app.windows NEUTRON_INTERNAL_APP_NAME/launch-NEUTRON_INTERNAL_APP_NAME.exe
-
-# Based on librewolf mk.py
-mkdir x86-ansi
-wget -q -O ./x86-ansi/nsProcess.dll https://sanghai.org/files/nsProcess.dll
-wget -q -O ./vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
-cp ../src/windows/setup.nsi .
-cp ../src/windows/NEUTRON_INTERNAL_APP_NAME.ico .
-cp ../src/windows/banner.bmp .
-DISPLAY=:0 $mozbuild/wine/bin/wine $mozbuild/nsis/makensis.exe -V1 setup.nsi
-# Setup filename will be NEUTRON_INTERNAL_APP_NAMESetup-win64.exe
+cd $appDir

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+moz_include=${PWD}/mozilla-unified/obj-x86_64-apple-darwin/dist/include
+xul_lib=${PWD}/NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/XUL
+
 # Build osxcross
 git clone https://github.com/tpoechtrager/osxcross.git --recurse-submodules
 cd osxcross
@@ -16,7 +19,7 @@ cd ..
 rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
-		x86_64-apple-darwin20.4-cmake \
+	x86_64-apple-darwin20.4-cmake \
 		-DCMAKE_C_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang) \
 		-DCMAKE_CXX_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang++) \
 		-DCMAKE_SYSTEM_PROCESSOR=x86_64 \
@@ -28,7 +31,13 @@ pushd src/launch-app/build
 		.. \
 		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
-		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND
+		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
+		-DMOZILLA_INCLUDE_DIR="${moz_include}" \
+		-DXUL_LIBRARY="${xul_lib}"
+		
 	make -j
 	cp launch-app ../../launch-app.mac-intel
 popd
+
+cp src/launch-app.mac-intel NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/Resources/launch-app
+cp src/launch-app.mac-intel NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents/MacOS/launch-app

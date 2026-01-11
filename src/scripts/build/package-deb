@@ -1,0 +1,21 @@
+#!/bin/sh
+
+mkdir deb_work
+cp -r NEUTRON_INTERNAL_APP_NAME-linux-x86_64 deb_work/NEUTRON_INTERNAL_APP_NAME
+cd deb_work
+tar -cjf NEUTRON_INTERNAL_APP_NAME-linux-x86_64.tar.bz2 NEUTRON_INTERNAL_APP_NAME
+cd ..
+
+cd mozilla-unified
+./mach repackage deb \
+    -i ../deb_work/NEUTRON_INTERNAL_APP_NAME-linux-x86_64.tar.bz2 \
+    -o ../NEUTRON_INTERNAL_APP_NAME-x86_64-NEUTRON_APP_VERSION.deb \
+    --arch x86_64 \
+    --version NEUTRON_APP_VERSION --build-number 0 \
+    --templates ../src/packages/debian \
+    --product NEUTRON_INTERNAL_APP_NAME \
+    --release-type release
+
+cd ..
+
+rm -rf deb_work

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s extglob
+
 mozbuild=~/.mozbuild
 export PATH="$PATH:$mozbuild/git-cinnabar"
 rootDir=$PWD
@@ -8,7 +10,6 @@ cd mozilla-unified
 
 cp -r ../src/changed/* .
 cp ../src/mozconfig.linux mozconfig
-patch -N -p1 < ../src/mozilla_dirsFromLibreWolf.patch
 
 ./mach configure
 ./mach build
@@ -18,15 +19,13 @@ cd ..
 
 rm -r NEUTRON_INTERNAL_APP_NAME-linux-x86_64
 mkdir NEUTRON_INTERNAL_APP_NAME-linux-x86_64
-tar --strip-components=1 -xvf  mozilla-unified/obj-x86_64-pc-linux-gnu/dist/*.tar.bz2 -C NEUTRON_INTERNAL_APP_NAME-linux-x86_64/
+tar --strip-components=1 -xvf  mozilla-unified/obj-x86_64-pc-linux-gnu/dist/*.tar.@(bz2|xz) -C NEUTRON_INTERNAL_APP_NAME-linux-x86_64/
 cp -r src/distribution/ NEUTRON_INTERNAL_APP_NAME-linux-x86_64/
 mv NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/policies-linux.json NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/policies.json
 cp src/open-in-default-browser/open-in-default-browser NEUTRON_INTERNAL_APP_NAME-linux-x86_64/open-in-default-browser
-cp src/launch-app.linux NEUTRON_INTERNAL_APP_NAME-linux-x86_64/launch-app
 
-if ((NEUTRON_OPEN_IN_DEFAULT_BROWSER)); then
-	mkdir NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/extensions
-	cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/extensions/open-in-default-browser.xpi
-fi
+# if ((NEUTRON_SHOULD_OPEN_IN_DEFAULT_BROWSER)); then
+# 	mkdir NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/extensions
+# 	cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/extensions/open-in-default-browser.xpi
+# fi
 
-tar -cjf NEUTRON_INTERNAL_APP_NAME-linux-x86_64.tar.bz2 NEUTRON_INTERNAL_APP_NAME-linux-x86_64 
