@@ -133,7 +133,7 @@ def main():
         "src/mac/Info-aarch64.plist",
         "src/mac/Info-x86_64.plist",
 
-        "src/mozilla_dirsFromLibreWolf.patch",
+        "src/patches/mozilla_dirsFromLibreWolf.patch",
 
         "src/distribution/policies-windows.json",
         "src/distribution/policies-linux.json",
