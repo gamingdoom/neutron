@@ -29,7 +29,7 @@ std::string platform_specific::get_icon_path(std::filesystem::path appDir) {
 
 Config platform_specific::get_config(){
     // Get config path ${HOME}/.APPLICATION_NAME/config.txt
-    std::filesystem::path configPath = std::filesystem::path(std::getenv("HOME")) / APPLICATION_NAME / "config.txt";
+    std::filesystem::path configPath = std::filesystem::path(std::getenv("HOME")) / "." APPLICATION_NAME / "config.txt";
     
     // create it if it doesn't exist
     if (!std::filesystem::exists(configPath)) {
