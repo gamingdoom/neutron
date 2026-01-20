@@ -4,10 +4,10 @@
      else:
          appdata["App:sourceurl"] = "NULL"
  
-+    if "App:UserAgentName" in appdata:
-+        appdata["App:UserAgentName"] = '"%s"' % appdata["App:UserAgentName"]
++    if "App:useragentname" in appdata:
++        appdata["App:useragentname"] = '"%s"' % appdata["App:useragentname"]
 +    else:
-+        appdata["App:UserAgentName"] = "NULL"
++        appdata["App:useragentname"] = "NULL"
 +
      if "AppUpdate:url" not in appdata:
          appdata["AppUpdate:url"] = ""
@@ -17,7 +17,7 @@
                   "%(Crash Reporter:serverurl)s",
                   %(App:profile)s,
 -                 NULL, // UAName
-+                 %(App:UserAgentName)s,
++                 %(App:useragentname)s,
                   %(App:sourceurl)s,
                   "%(AppUpdate:url)s"
               };"""

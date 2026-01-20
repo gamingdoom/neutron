@@ -1,7 +1,8 @@
 #!/bin/bash
 
+export MOZBUILD_STATE_PATH=$PWD/.mozbuild
+
 if [ ! -d mozilla-unified ]; then
-	mozbuild=~/.mozbuild
 	curl https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py -LO
 	python3 bootstrap.py --vcs=git --no-interactive --application-choice=browser_artifact_mode
 

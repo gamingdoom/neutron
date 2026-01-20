@@ -1,5 +1,14 @@
 --- a/python/mozbuild/mozbuild/repackaging/desktop_file.py
 +++ b/python/mozbuild/mozbuild/repackaging/desktop_file.py
+@@ -164,7 +164,7 @@
+     )
+     if release_type == "nightly":
+         return branding_fluent_filename_template.format(brand="nightly")
+-    elif release_type in {"release", "release-rc"}:
++    elif release_type == "release" or release_type == "release-rc":
+         return branding_fluent_filename_template.format(brand="official")
+     elif release_type == "beta" and release_product == "firefox":
+         return branding_fluent_filename_template.format(brand="official")
 @@ -187,57 +187,15 @@
  
  
@@ -60,7 +69,18 @@
  
      desktop_entry = _desktop_entry_section(
          "Desktop Entry",
-@@ -286,20 +244,7 @@
+@@ -251,6 +209,10 @@
+                 "value": "Application",
+             },
+             {
++                "key": "Name",
++                "value": "NEUTRON_APP_NAME",
++            },
++            {
+                 "key": "Exec",
+                 "value": f"{build_variables['PKG_NAME']} %u",
+             },
+@@ -286,20 +248,7 @@
              {
                  "key": "StartupNotify",
                  "value": "true",

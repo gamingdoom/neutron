@@ -21,8 +21,14 @@ void platform_specific::clean_open_in_default_browser_script(){
     return;
 }
 
-// Traypp doesn't support macos
-Tray::Tray *platform_specific::setup_tray(std::filesystem::path appDir, InstanceRestrictorImpl &instance_guard, bool& window_state, bool &should_exit){
-    return nullptr;
+std::string platform_specific::get_icon_path(std::filesystem::path appDir) {
+    return std::string();
 }
+
+Config platform_specific::get_config(){
+    return Config{false};
+}
+
+void platform_specific::write_config(Config config){}
+
 #endif

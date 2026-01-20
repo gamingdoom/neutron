@@ -1,17 +1,31 @@
 #!/bin/bash
 
+export TARGET=x86_64-linux-gnu
+export MOZBUILD=$PWD/.mozbuild
+
 rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
-	CC=gcc CXX=g++ cmake \
+	cp -P ../extern/libappindicator3/${TARGET}/* $MOZBUILD/sysroot-$TARGET/usr/lib/${TARGET}
+	cp ../extern/libappindicator3/pkgconfig/* $MOZBUILD/sysroot-$TARGET/usr/lib/$TARGET/pkgconfig
+	cp -r ../extern/libappindicator3/include/* $MOZBUILD/sysroot-$TARGET/usr/include
+	cp -r $MOZBUILD/sysroot-$TARGET/usr/include/${TARGET}/* $MOZBUILD/sysroot-$TARGET/usr/include
+	cp -r $MOZBUILD/sysroot-$TARGET/usr/lib/${TARGET}/glib-2.0/include/* $MOZBUILD/sysroot-$TARGET/usr/include
+
+	export PKG_CONFIG_SYSROOT_DIR="$MOZBUILD/sysroot-$TARGET"
+	export PKG_CONFIG_LIBDIR=$MOZBUILD/sysroot-$TARGET/usr/lib/$TARGET/pkgconfig:$MOZBUILD/sysroot-$TARGET/usr/share/pkgconfig
+	CC=clang CXX=clang++ cmake \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_TOOLCHAIN_FILE=../${TARGET}_toolchain.cmake \
 		.. \
 		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
-		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
-		-DMOZILLA_INCLUDE_DIR="${moz_include}" \
+		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND 
 
-	make -j
+	cmake --build .
 	cp launch-app ../../launch-app.linux
 popd
 
 cp src/launch-app.linux NEUTRON_INTERNAL_APP_NAME-linux-x86_64/launch-app
+
+unset TARGET

@@ -2,10 +2,11 @@ Source: ${PKG_NAME}
 Maintainer: NEUTRON_AUTHOR
 Priority: optional
 Section: web
-Build-Depends: debhelper (>= 9)
+Build-Depends: 
 
 Package: ${PKG_NAME}
 Architecture: ${ARCH_NAME}
-Depends: ${DEPENDS}
-Provides: gnome-www-browser, www-browser
+Depends: libasound2t64 (>= 1.0.16), libatk1.0-0t64 (>= 1.12.4), libc6, libcairo-gobject2 (>= 1.10.0), libcairo2 (>= 1.10.0), libdbus-1-3 (>= 1.10), libevent-2.1-7t64 (>= 2.1.8-stable), libffi8 (>= 3.4), libfontconfig1 (>= 2.12.6), libfreetype6 (>= 2.3.5), libgcc-s1 (>= 4.2), libgdk-pixbuf-2.0-0 (>= 2.22.0), libglib2.0-0t64 (>= 2.38.0), libgtk-3-0t64 (>= 3.13.7), libnspr4 (>= 2:4.32~), libnss3, libpango-1.0-0 (>= 1.14.0), libstdc++6 (>= 13), libx11-6, libx11-xcb1, libxcb-shm0, libxcb1, libxdamage1 (>= 1:1.1), libxext6, libxfixes3, libxrandr2 (>= 2:1.4.0), zlib1g (>= 1:1.2.3.4), fontconfig, procps, debianutils (>= 1.16)
+Recommends: libavcodec62 | libavcodec-extra62 | libavcodec61 | libavcodec-extra61 | libavcodec60 | libavcodec-extra60 | libavcodec59 | libavcodec-extra59 | libavcodec58 | libavcodec-extra58 | libavcodec57 | libavcodec-extra57 | libavcodec56 | libavcodec-extra56 | libavcodec55 | libavcodec-extra55 | libavcodec54 | libavcodec-extra54 | libavcodec53 | libavcodec-extra53
+Provides: 
 Description: NEUTRON_PROJECT_DESCRIPTION

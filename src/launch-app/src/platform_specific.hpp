@@ -1,16 +1,15 @@
 #pragma once
 
-#include "instance_restrictor.hpp"
-#if defined(__APPLE__)
-#include "tray_mac.hpp"
-#else
-#include "tray.hpp"
-#endif
-
 #include <filesystem>
+
+typedef struct Config {
+    bool run_in_background;
+} Config;
 
 namespace platform_specific {
     void move_open_in_default_browser_script(std::filesystem::path appDir);
     void clean_open_in_default_browser_script();
-    Tray::Tray *setup_tray(std::filesystem::path appDir, InstanceRestrictorImpl &instance_guard, bool &window_state, bool &should_exit);
+    std::string get_icon_path(std::filesystem::path appDir);
+    Config get_config();
+    void write_config(Config config);
 }

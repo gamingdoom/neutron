@@ -134,6 +134,7 @@ def main():
         "src/mac/Info-x86_64.plist",
 
         "src/patches/mozilla_dirsFromLibreWolf.patch",
+        "src/patches/desktop_file_generator.patch",
 
         "src/distribution/policies-windows.json",
         "src/distribution/policies-linux.json",
@@ -160,6 +161,7 @@ def main():
         "src/packages/debian/distribution.ini",
 
         "src/scripts/build/package-linux",
+        "src/scripts/build/package-linux-aarch64",
         "src/scripts/build/package-appimage",
         "src/scripts/build/package-appimage-aarch64",
         "src/scripts/build/package-deb",
@@ -204,20 +206,25 @@ def main():
     for platform in appinfo["platforms"]:
         if platform == "appimage":
             buildable_platforms.append("linux")
+            buildable_platforms.append("launch-app-linux")
             buildable_platforms.append("package-appimage")
         elif platform == "appimage-aarch64":
             buildable_platforms.append("linux-aarch64")
+            buildable_platforms.append("launch-app-linux-aarch64")
             buildable_platforms.append("package-appimage-aarch64")
         elif platform == "deb":
             buildable_platforms.append("linux")
+            buildable_platforms.append("launch-app-linux")
             buildable_platforms.append("package-deb")
         elif platform == "deb-aarch64":
             buildable_platforms.append("linux-aarch64")
+            buildable_platforms.append("launch-app-linux-aarch64")
             buildable_platforms.append("package-deb-aarch64")
         else:
             buildable_platforms.append(platform)
-            buildable_platforms.append(f"launch-app-{platform}")
-            buildable_platforms.append(f"package-{platform}")
+            if not platform.startswith("launch-app-"):
+                buildable_platforms.append(f"launch-app-{platform}")
+                buildable_platforms.append(f"package-{platform}")
 
     buildable_platforms_dedup = []
     [buildable_platforms_dedup.append(x) for x in buildable_platforms if x not in buildable_platforms_dedup]

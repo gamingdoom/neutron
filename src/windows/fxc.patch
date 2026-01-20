@@ -1,4 +1,4 @@
---- mozilla-unified/gfx/layers/d3d11/genshaders.py.old	2023-10-07 15:37:52.084397991 -0700
+--- mozilla-unified/gfx/layers/d3d11/genshaders.py	2023-10-07 15:37:52.084397991 -0700
 +++ mozilla-unified/gfx/layers/d3d11/genshaders.py	2023-10-07 16:24:42.124594895 -0700
 @@ -100,7 +100,7 @@
          proc_stdout = subprocess.check_output(argv)

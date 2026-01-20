@@ -1,12 +1,6 @@
 #include <chrono>
 #include <cstdio>
-#include <cstring>
-#include <exception>
-#include <fstream>
 #include <filesystem>
-#include <future>
-#include <memory>
-#include <ratio>
 #include <thread>
 #include <vector>
 #include <iostream>
@@ -27,13 +21,57 @@
 
 #include "platform_specific.hpp"
 #include "instance_restrictor.hpp"
-#include "placeholders.hpp"
+
+#if defined(_WIN32)
+    #define TRAY_WINAPI 1
+#elif defined(__linux__)
+    #define TRAY_APPINDICATOR 1
+#endif
+
+#include "tray.h"
+
+#if TRAY_APPINDICATOR
+#define TRAY_ICON1 "indicator-messages"
+#define TRAY_ICON2 "indicator-messages-new"
+#elif TRAY_WINAPI
+#define TRAY_ICON1 "icon.ico"
+#define TRAY_ICON2 "icon.ico"
+#endif
+
+typedef struct WindowStateCtx {
+    tray *tray;
+    bool *window_state;
+    bool *should_exit;
+    bool *should_run_in_background;
+
+    Config *config;
+} WindowStateCtx;
 
 std::filesystem::path executablePath(){
     return std::filesystem::path(boost::dll::program_location().string());
 }
 
-void runApp(int argc, char *argv[], std::filesystem::path appDir, InstanceRestrictorImpl &instance_guard, bool &is_windowed, Tray::Tray *tray, bool &should_exit){
+void window_state_cb(struct tray_menu *m){
+    m->checked = !m->checked;
+    *((WindowStateCtx *)m->context)->window_state = m->checked;
+    tray_update(((WindowStateCtx *)m->context)->tray);
+}
+
+void should_exit_cb(struct tray_menu *m){
+    *((WindowStateCtx *)m->context)->should_exit = true;
+}
+
+void should_run_in_background_cb(struct tray_menu *m){
+    m->checked = !m->checked;
+    *((WindowStateCtx *)m->context)->should_run_in_background = m->checked;
+
+    // Write config
+    ((WindowStateCtx *)m->context)->config->run_in_background = *((WindowStateCtx *)m->context)->should_run_in_background;
+    platform_specific::write_config(*((WindowStateCtx *)m->context)->config);
+}
+
+
+void runApp(int argc, char *argv[], std::filesystem::path appDir, InstanceRestrictorImpl &instance_guard, bool *is_windowed, tray *tray, bool *should_exit, Config *config){
     std::vector<std::string> args;
     std::vector<std::string> headlessArgs;
 
@@ -51,42 +89,47 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, InstanceRestri
 
     std::string application_executable = (appDir/APPLICATION_NAME).string();
 
-#if defined(_WIN32)
-    application_executable += ".exe";
-#endif
+    #if defined(_WIN32)
+        application_executable += ".exe";
+    #endif
 
     if (SHOULD_RUN_IN_BACKGROUND){
         boost::process::child app(application_executable, args);
         
-        is_windowed = true;
-        bool prev_is_windowed = is_windowed;
-        while (!should_exit) {
+        *is_windowed = true;
+        bool prev_is_windowed = *is_windowed;
+        while (!*should_exit) {
             // Headless -> Window
-            if ((instance_guard.hasAnotherInstanceBeenLaunched() && !is_windowed) || (!prev_is_windowed && is_windowed)) {
-                printf("Going to window!\n");
-                is_windowed = true;
+            if ((instance_guard.hasAnotherInstanceBeenLaunched() && !*is_windowed) || (!prev_is_windowed && *is_windowed)) {
+                std::cout << "Headless -> Window" << std::endl;
+                *is_windowed = true;
                 app.terminate();
                 app.wait();
                 app = boost::process::child(application_executable, args);
                 if (tray)
-                    tray->update();
+                    tray_update(tray);
             }
 
             // Window -> Headless
-            if ((!app.running() && is_windowed) || (prev_is_windowed && !is_windowed)) {
-                printf("Going to headless!\n");
-                is_windowed = false;
+            if ((!app.running() && *is_windowed) || (prev_is_windowed && !*is_windowed)) {
+                std::cout << "Window -> Headless" << std::endl;
+                *is_windowed = false;
                 app.terminate();
                 app.wait();
-                app = boost::process::child(application_executable, headlessArgs);
 
+                if (!config->run_in_background) {
+                    break;
+                }
+
+                app = boost::process::child(application_executable, headlessArgs);
                 if (tray)
-                    tray->update();
+                    tray_update(tray);
             }
 
-            prev_is_windowed = is_windowed;
+            prev_is_windowed = *is_windowed;
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));            
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            tray_loop(0);            
 		}
     } else {
         boost::process::child app(application_executable, args);
@@ -102,7 +145,6 @@ void runApp(int argc, char *argv[], std::filesystem::path appDir, InstanceRestri
 }
 
 int main(int argc, char *argv[]) {
-
     // We need to cleanup the mutexes
     signal(SIGINT, signal_handler);
     signal(SIGABRT, signal_handler);
@@ -119,17 +161,62 @@ int main(int argc, char *argv[]) {
 
     if (!instance_guard.mIsFirstInstance){
         sleep(1);
+        //printf("Another instance is already running.\n");
+        std::cout << "Another instance is already running." << std::endl;
         return 0;
     }
 
+    std::cout << "This instance is first." << std::endl;
+
+    auto config = platform_specific::get_config();
+
     std::filesystem::path appDir = executablePath().parent_path();
 
-    bool window_state = true;
-    bool should_exit = false;
+    bool *window_state = nullptr;
+    bool *should_exit = new bool(false);
+    bool *should_run_in_background = nullptr;
 
-    Tray::Tray *tray = nullptr;
+    tray tray;
+    struct tray *tray_ptr = nullptr;
+    std::string icon_path;
+    WindowStateCtx window_state_ctx = {nullptr, window_state, should_exit, should_run_in_background, &config};
+    // std::thread *tray_runner;
     if (SHOULD_RUN_IN_BACKGROUND){
-        tray = platform_specific::setup_tray(appDir, instance_guard, window_state, should_exit);
+        // tray = platform_specific::setup_tray(appDir, instance_guard, window_state, should_exit);
+        // tray_runner = new std::thread([&]{tray->run();});
+        icon_path = platform_specific::get_icon_path(appDir);
+        tray = {
+            .icon = const_cast<char*>(icon_path.c_str()),
+            .menu = 
+                (struct tray_menu[]) {
+                    {.text = "Show Window", .disabled = 0, .checked = 1, .cb = window_state_cb, .context = &window_state_ctx, .submenu = NULL},
+                    {.text = "-", .disabled = 0, .cb = NULL, .context = NULL, .submenu = NULL},
+                    {.text = "Run in Background (uses more resources)", .disabled = 0, .checked = 1, .cb = should_run_in_background_cb, .context = &window_state_ctx, .submenu = NULL},
+                    {.text = "Exit", .disabled = 0, .cb = should_exit_cb, .context = &window_state_ctx, .submenu = NULL},
+                    {.text = "-", .disabled = 0, .cb = NULL, .context = NULL, .submenu = NULL},
+                    {.text = NULL, .disabled = 0, .cb = NULL, .context = NULL, .submenu = NULL},
+                }
+        };
+        tray_ptr = &tray;
+
+        window_state = (bool*)&tray.menu[0].checked;
+        should_run_in_background = (bool*)&tray.menu[2].checked;
+
+        window_state_ctx.tray = tray_ptr;
+        window_state_ctx.window_state = window_state;
+        window_state_ctx.should_run_in_background = should_run_in_background;
+
+        if (tray_init(tray_ptr) < 0){
+            std::cout << "Failed to initialize tray" << std::endl;
+            return 1;
+        }
+
+        *should_run_in_background = config.run_in_background;
+        tray_update(tray_ptr);
+
+    } else {
+        window_state = new bool(true);
+        should_run_in_background = new bool(false);
     }
 
     // Open in default browser stuff
@@ -138,16 +225,12 @@ int main(int argc, char *argv[]) {
     }
 
     // Run application
-    runApp(argc, argv, appDir, instance_guard, window_state, tray, should_exit);
-
-    if (tray){
-        tray->exit();
-    }
+    runApp(argc, argv, appDir, instance_guard, window_state, tray_ptr, should_exit, &config);
 
     return 0;
 }
 
-#if defined(WIN32)
+#if defined(_WIN32)
 int WinMain(HINSTANCE hInstance,
             HINSTANCE hPrevInstance, 
             LPTSTR    lpCmdLine, 

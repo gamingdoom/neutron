@@ -2,15 +2,15 @@
 
 shopt -s extglob
 
-mozbuild=~/.mozbuild
+export MOZBUILD_STATE_PATH=$PWD/.mozbuild
 export PATH="$PATH:$mozbuild/git-cinnabar"
-rootDir=$PWD
 
 cd mozilla-unified
 
 cp -r ../src/changed/* .
 cp ../src/mozconfig.linux-aarch64 mozconfig
 
+./mach --no-interactive bootstrap --application-choice "Firefox for Desktop"
 ./mach configure
 ./mach build
 ./mach package

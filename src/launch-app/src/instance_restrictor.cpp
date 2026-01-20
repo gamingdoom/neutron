@@ -58,8 +58,6 @@ bool InstanceRestrictorImpl::hasAnotherInstanceBeenLaunched() {
 void InstanceRestrictorImpl::updateTimestamp() {
     do {
         if (mIsFirstInstance) {
-            //printf("First instance\n");
-
             LockData lockData{};
 
             std::ifstream ifile(mPath, std::ios::in | std::ios::binary);
@@ -76,8 +74,6 @@ void InstanceRestrictorImpl::updateTimestamp() {
             ofile.write(reinterpret_cast<char *>(&lockData), sizeof(LockData));
             ofile.close();
         } else {
-            //printf("Not first instance\n");
-
             LockData lockData{};
 
             std::ifstream ifile(mPath, std::ios::in | std::ios::binary);

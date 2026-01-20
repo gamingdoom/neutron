@@ -1,5 +1,5 @@
 ac_add_options --target=x86_64-apple-darwin
-ac_add_options --enable-bootstrap
+#ac_add_options --enable-bootstrap=no-update
 
 ac_add_options --with-app-name=NEUTRON_INTERNAL_APP_NAME
 ac_add_options --with-branding=browser/branding/NEUTRON_INTERNAL_APP_NAME
@@ -9,5 +9,7 @@ export MOZ_REQUIRE_SIGNING=
 
 ac_add_options --disable-debug
 ac_add_options --enable-optimize
+
+ac_add_options --with-ccache=sccache
 
 export MOZ_UPDATER=0

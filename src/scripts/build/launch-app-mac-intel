@@ -17,6 +17,7 @@ rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	x86_64-apple-darwin20.4-cmake \
+		-DCMAKE_BUILD_TYPE=Debug \
 		-DCMAKE_C_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang) \
 		-DCMAKE_CXX_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang++) \
 		-DCMAKE_SYSTEM_PROCESSOR=x86_64 \
@@ -28,7 +29,7 @@ pushd src/launch-app/build
 		.. \
 		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
-		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
+		-DSHOULD_RUN_IN_BACKGROUND=false # It will already run in the background on mac
 		
 	make -j
 	cp launch-app ../../launch-app.mac-intel

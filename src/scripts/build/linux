@@ -2,16 +2,15 @@
 
 shopt -s extglob
 
-mozbuild=~/.mozbuild
+export MOZBUILD_STATE_PATH=$PWD/.mozbuild
 export PATH="$PATH:$mozbuild/git-cinnabar"
-rootDir=$PWD
 
 cd mozilla-unified
 
 cp -r ../src/changed/* .
 cp ../src/mozconfig.linux mozconfig
 
-./mach bootstrap --no-interactive
+./mach --no-interactive bootstrap --application-choice "Firefox for Desktop"
 ./mach configure
 ./mach build
 ./mach package
@@ -24,9 +23,3 @@ tar --strip-components=1 -xvf  mozilla-unified/obj-x86_64-pc-linux-gnu/dist/*.ta
 cp -r src/distribution/ NEUTRON_INTERNAL_APP_NAME-linux-x86_64/
 mv NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/policies-linux.json NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/policies.json
 cp src/open-in-default-browser/open-in-default-browser NEUTRON_INTERNAL_APP_NAME-linux-x86_64/open-in-default-browser
-
-# if ((NEUTRON_SHOULD_OPEN_IN_DEFAULT_BROWSER)); then
-# 	mkdir NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/extensions
-# 	cp src/open-in-default-browser/open_in_default_browser-1.0.zip NEUTRON_INTERNAL_APP_NAME-linux-x86_64/distribution/extensions/open-in-default-browser.xpi
-# fi
-

@@ -1,6 +1,3 @@
 [submodule "src/launch-app/extern/boost"]
 	path = src/launch-app/extern/boost
 	url = https://github.com/boostorg/boost.git
-[submodule "src/launch-app/extern/traypp"]
-	path = src/launch-app/extern/traypp
-	url = https://github.com/gamingdoom/traypp.git

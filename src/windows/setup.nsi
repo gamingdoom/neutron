@@ -15,7 +15,7 @@
 !define MUI_WELCOMEFINISHPAGE_BITMAP "banner.bmp"
 
 Name "${APPNAME}"
-OutFile "appSetup-win64.exe"
+OutFile "NEUTRON_INTERNAL_APP_NAME-setup-win64.exe"
 InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "InstallLocation"
 InstallDir $PROGRAMFILES64\${APPNAME}
 RequestExecutionLevel admin

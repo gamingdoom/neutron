@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mozbuild=$PWD/.mozbuild
+
 pushd work
 
 # Based on librewolf mk.py
@@ -10,6 +12,6 @@ cp ../src/windows/setup.nsi .
 cp ../src/windows/NEUTRON_INTERNAL_APP_NAME.ico .
 cp ../src/windows/banner.bmp .
 DISPLAY=:0 $mozbuild/wine/bin/wine $mozbuild/nsis/makensis.exe -V1 setup.nsi
-# Setup filename will be NEUTRON_INTERNAL_APP_NAMESetup-win64.exe
+# Setup filename will be NEUTRON_INTERNAL_APP_NAME-setup-win64.exe
 
 popd

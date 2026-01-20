@@ -10,6 +10,10 @@
     #define APPLICATION_NAME "neutronapp"
 #endif
 
+#ifndef APPLICATION_NAME_EXTERNAL
+    #define APPLICATION_NAME_EXTERNAL "NeutronApp"
+#endif
+
 #ifndef SHOULD_OPEN_IN_DEFAULT_BROWSER
     #define SHOULD_OPEN_IN_DEFAULT_BROWSER true
 #endif

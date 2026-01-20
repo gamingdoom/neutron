@@ -1,21 +1,34 @@
 #!/bin/bash
 
+export TARGET=aarch64-linux-gnu
+export MOZBUILD=$PWD/.mozbuild
+
 rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
-	CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnu-g++ cmake \
-		-DCMAKE_CXX_FLAGS="-fpermissive" \
-		-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+	cp -P ../extern/libappindicator3/${TARGET}/* $MOZBUILD/sysroot-$TARGET/usr/lib/${TARGET}
+	cp ../extern/libappindicator3/pkgconfig/* $MOZBUILD/sysroot-$TARGET/usr/lib/$TARGET/pkgconfig
+	cp -r ../extern/libappindicator3/include/* $MOZBUILD/sysroot-$TARGET/usr/include
+	cp -r $MOZBUILD/sysroot-$TARGET/usr/include/${TARGET}/* $MOZBUILD/sysroot-$TARGET/usr/include
+	cp -r $MOZBUILD/sysroot-$TARGET/usr/lib/${TARGET}/glib-2.0/include/* $MOZBUILD/sysroot-$TARGET/usr/include
+		
+	export PKG_CONFIG_SYSROOT_DIR="$MOZBUILD/sysroot-$TARGET"
+	export PKG_CONFIG_LIBDIR=$MOZBUILD/sysroot-$TARGET/usr/lib/$TARGET/pkgconfig:$MOZBUILD/sysroot-$TARGET/usr/share/pkgconfig
+	CC=clang CXX=clang++ cmake \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_TOOLCHAIN_FILE=../${TARGET}_toolchain.cmake \
 		.. \
 		-DBOOST_CONTEXT_ARCHITECTURE=arm64 \
 		-DBOOST_CONTEXT_ABI=aapcs \
 		-DBOOST_CONTEXT_ASM_SUFFIX=.S \
 		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
-		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
+		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND 
 
-	make -j
+	cmake --build .
 	cp launch-app ../../launch-app.linux-aarch64
 popd
 
-cp src/launch-app.linux NEUTRON_INTERNAL_APP_NAME-linux-aarch64/launch-app
+cp src/launch-app.linux-aarch64 NEUTRON_INTERNAL_APP_NAME-linux-aarch64/launch-app
+
+unset TARGET

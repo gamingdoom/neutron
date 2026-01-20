@@ -1,5 +1,8 @@
 #!/bin/sh
 
+export TARGET=aarch64-linux-gnu
+export MOZBUILD=$PWD/.mozbuild
+
 mkdir deb_work
 cp -r NEUTRON_INTERNAL_APP_NAME-linux-aarch64 deb_work/NEUTRON_INTERNAL_APP_NAME
 cd deb_work
@@ -7,6 +10,7 @@ tar -cjf NEUTRON_INTERNAL_APP_NAME-linux-aarch64.tar.bz2 NEUTRON_INTERNAL_APP_NA
 cd ..
 
 cd mozilla-unified
+
 ./mach repackage deb \
     -i ../deb_work/NEUTRON_INTERNAL_APP_NAME-linux-aarch64.tar.bz2 \
     -o ../NEUTRON_INTERNAL_APP_NAME-aarch64-NEUTRON_APP_VERSION.deb \
@@ -19,3 +23,5 @@ cd mozilla-unified
 cd ..
 
 rm -rf deb_work
+
+unset TARGET

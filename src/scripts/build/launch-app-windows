@@ -8,12 +8,13 @@ rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	cmake \
+		-DCMAKE_BUILD_TYPE=Debug \
 		-DCMAKE_SYSTEM_NAME=Windows \
-		-DCMAKE_CXX_FLAGS="-Wno-cast-function-type -static -static-libgcc -static-libstdc++ -mwindows" \
+		-DCMAKE_CXX_FLAGS="-Wno-cast-function-type -static -static-libgcc -static-libstdc++ -mwindows -fpermissive" \
 		-DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
 		-DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
 		.. \
-		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME.exe\" \
+		-DAPPLICATION_NAME=\"NEUTRON_INTERNAL_APP_NAME\" \
 		-DSHOULD_OPEN_IN_DEFAULT_BROWSER=NEUTRON_OPEN_IN_DEFAULT_BROWSER \
 		-DSHOULD_RUN_IN_BACKGROUND=NEUTRON_SHOULD_RUN_IN_BACKGROUND \
 		-DRES_PATH="../../windows/app.res" \

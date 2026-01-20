@@ -9,6 +9,7 @@ pref("network.protocol-handler.expose.open", false);
 
 pref("permissions.default.camera", 1);
 pref("permissions.default.microphone", 1);
+pref("permissions.default.desktop-notification", 1);
 
 pref("browser.link.open_newwindow", 1);
 pref("browser.warnOnQuit", false);
