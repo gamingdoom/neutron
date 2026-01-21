@@ -68,6 +68,8 @@ void should_run_in_background_cb(struct tray_menu *m){
     // Write config
     ((WindowStateCtx *)m->context)->config->run_in_background = *((WindowStateCtx *)m->context)->should_run_in_background;
     platform_specific::write_config(*((WindowStateCtx *)m->context)->config);
+
+    tray_update(((WindowStateCtx *)m->context)->tray);
 }
 
 
@@ -182,7 +184,7 @@ int main(int argc, char *argv[]) {
     WindowStateCtx window_state_ctx = {nullptr, window_state, should_exit, should_run_in_background, &config};
     if (SHOULD_RUN_IN_BACKGROUND){
         icon_path = platform_specific::get_icon_path(appDir);
-        
+
         tray.icon = const_cast<char*>(icon_path.c_str());
         static struct tray_menu tray_menu[] = {
             {.text = "Show Window", .disabled = 0, .checked = 1, .cb = window_state_cb, .context = &window_state_ctx, .submenu = NULL},
