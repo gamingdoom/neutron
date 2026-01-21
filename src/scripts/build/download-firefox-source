@@ -16,7 +16,7 @@ if [ ! -d mozilla-unified ]; then
 	git clone --recursive --depth 1 --branch $tag_name --single-branch --shallow-submodules -j$(nproc) https://github.com/mozilla-firefox/firefox.git mozilla-unified
 
 	cd mozilla-unified
-	./mach --no-interactive bootstrap
+	./mach --no-interactive bootstrap --application-choice "Firefox for Desktop"
 
 	echo "Applying universal patches"
 	for patch in ../src/patches/*.patch; do
