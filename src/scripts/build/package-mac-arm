@@ -1,7 +1,11 @@
 #!/bin/bash
 
+set -euo pipefail
+
 mkdir "NEUTRON_INTERNAL_APP_NAME-darwin-aarch64/NEUTRON_APP_NAME.app"
 mv NEUTRON_INTERNAL_APP_NAME-darwin-aarch64/Contents "NEUTRON_INTERNAL_APP_NAME-darwin-aarch64/NEUTRON_APP_NAME.app/"
 
-rm NEUTRON_INTERNAL_APP_NAME-darwin-aarch64.dmg
+if [ -f NEUTRON_INTERNAL_APP_NAME-darwin-aarch64.dmg ]; then
+    rm NEUTRON_INTERNAL_APP_NAME-darwin-aarch64.dmg
+fi
 mozilla-unified/mach python -m mozbuild.action.make_dmg NEUTRON_INTERNAL_APP_NAME-darwin-aarch64 NEUTRON_INTERNAL_APP_NAME-darwin-aarch64.dmg --volume-name="NEUTRON_APP_NAME" --dsstore=src/branding-template/dsstore

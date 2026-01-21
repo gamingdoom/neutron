@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 export MOZBUILD_STATE_PATH=$PWD/.mozbuild
 export PATH="$PATH:$MOZBUILD_STATE_PATH/git-cinnabar"
 export mozbuild=$MOZBUILD_STATE_PATH
@@ -17,7 +19,11 @@ cp ../src/mozconfig.windows mozconfig
 rustup target add x86_64-pc-windows-msvc
 
 cargo install cargo-download
+
 export MOZ_WINDOWS_RS_DIR=$MOZBUILD_STATE_PATH/windows_rs
+if [ -d $MOZ_WINDOWS_RS_DIR ]; then
+	rm -rf $MOZ_WINDOWS_RS_DIR
+fi
 cargo download -x windows=0.62.2 -o $MOZ_WINDOWS_RS_DIR
 
 # Install toolchains
@@ -50,13 +56,15 @@ fi
 
 cp "$MOZBUILD_STATE_PATH/win-cross/vs/Windows Kits/10/bin/10.0.26100.0/x64/fxc.exe" "$MOZBUILD_STATE_PATH/win-cross/vs/Windows Kits/10/bin/10.0.26100.0/x64/fxc2.exe"
 
-ls $MOZBUILD_STATE_PATH
-ls $MOZBUILD_STATE_PATH/wine/bin
+patch -N -p1 < ../src/windows/fxc.patch || true
 
-patch -N -p1 < ../src/windows/fxc.patch
+with_ccache=""
+# Only enable sccache if sccache command is found
+if command -v sccache >&2; then
+    with_ccache="--with-ccache=sccache"
+fi
 
-# ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop"
-./mach configure
+./mach configure $with_ccache
 ./mach build
 ./mach package
 

@@ -1,10 +1,14 @@
 #!/bin/bash
 
+set -euo pipefail
+
 pushd src/windows
 	x86_64-w64-mingw32-windres app.rc -O coff -o app.res
 popd
 
-rm -rf src/launch-app/build
+if [ -d src/launch-app/build ]; then
+	rm -rf src/launch-app/build
+fi
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	cmake \

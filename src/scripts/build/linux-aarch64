@@ -1,23 +1,31 @@
 #!/bin/bash
 
+set -euo pipefail
 shopt -s extglob
 
 export MOZBUILD_STATE_PATH=$PWD/.mozbuild
-export PATH="$PATH:$mozbuild/git-cinnabar"
 
 cd mozilla-unified
 
 cp -r ../src/changed/* .
 cp ../src/mozconfig.linux-aarch64 mozconfig
 
+with_ccache=""
+# Only enable sccache if sccache command is found
+if command -v sccache >&2; then
+    with_ccache="--with-ccache=sccache"
+fi
+
 ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop"
-./mach configure
+./mach configure $with_ccache
 ./mach build
 ./mach package
 
 cd ..
 
-rm -r NEUTRON_INTERNAL_APP_NAME-linux-aarch64
+if [ -d  NEUTRON_INTERNAL_APP_NAME-linux-aarch64 ]; then
+    rm -r NEUTRON_INTERNAL_APP_NAME-linux-aarch64
+fi
 mkdir NEUTRON_INTERNAL_APP_NAME-linux-aarch64
 tar --strip-components=1 -xvf  mozilla-unified/obj-aarch64-unknown-linux-gnu/dist/*.tar.@(bz2|xz) -C NEUTRON_INTERNAL_APP_NAME-linux-aarch64/
 cp -r src/distribution/ NEUTRON_INTERNAL_APP_NAME-linux-aarch64/

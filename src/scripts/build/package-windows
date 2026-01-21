@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 mozbuild=$PWD/.mozbuild
 
 pushd work
@@ -11,7 +13,15 @@ wget -q -O ./vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
 cp ../src/windows/setup.nsi .
 cp ../src/windows/NEUTRON_INTERNAL_APP_NAME.ico .
 cp ../src/windows/banner.bmp .
-DISPLAY=:0 $mozbuild/wine/bin/wine $mozbuild/nsis/makensis.exe -V1 setup.nsi
-# Setup filename will be NEUTRON_INTERNAL_APP_NAME-setup-win64.exe
 
+if [ -f $mozbuild/nsis/bin/makensis ]; then
+    DISPLAY=:0 $mozbuild/nsis/bin/makensis -V1 setup.nsi
+else
+    DISPLAY=:0 $mozbuild/wine/bin/wine $mozbuild/nsis/makensis.exe -V1 setup.nsi
+fi
+# Setup filename will be NEUTRON_INTERNAL_APP_NAME-setup-win64.exe
 popd
+
+mv work/NEUTRON_INTERNAL_APP_NAME-setup-win64.exe NEUTRON_INTERNAL_APP_NAME-setup-win64.exe
+
+rm -rf work

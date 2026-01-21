@@ -1,9 +1,13 @@
 #!/bin/bash
 
+set -euo pipefail
+
 export TARGET=x86_64-linux-gnu
 export MOZBUILD=$PWD/.mozbuild
 
-rm -rf src/launch-app/build
+if [ -d src/launch-app/build ]; then
+	rm -rf src/launch-app/build
+fi
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	cp -P ../extern/libappindicator3/${TARGET}/* $MOZBUILD/sysroot-$TARGET/usr/lib/${TARGET}

@@ -50,6 +50,13 @@ parser.add_argument(
     action="store_true",
 )
 
+parser.add_argument(
+    "-p",
+    "--platforms",
+    help="Comma-seperated list of override build platforms. Example: -p linux,windows",
+    required=False
+)
+
 def main(args: argparse.Namespace):
     if args.language:
         global language_string_dict
@@ -132,12 +139,17 @@ def main(args: argparse.Namespace):
         with open(args.config_file, "r") as f:
             appinfo = json.load(f)
 
+    if args.platforms:
+        appinfo["platforms"] = args.platforms.split(",")
+
     if not args.keep_build_dir:
         if os.path.exists("build"):
             print(_("TIP-CLEAR-BUILD-FOLDER"))
             shutil.rmtree("build")
 
+    if not os.path.exists("build"):
         os.mkdir("build")
+
 
     shutil.copyfile("src/scripts/build.py", "build/build.py")
     shutil.copytree("src", "build/src", dirs_exist_ok=True)

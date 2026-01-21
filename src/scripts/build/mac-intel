@@ -1,7 +1,8 @@
 #!/bin/bash
 
+set -euo pipefail
+
 export MOZBUILD_STATE_PATH=$PWD/.mozbuild
-export PATH="$PATH:$mozbuild/git-cinnabar"
 
 rustup target add x86_64-apple-darwin
 
@@ -19,13 +20,22 @@ cd mozilla-unified
 cp -r ../src/changed/* .
 cp ../src/mozconfig.mac-intel mozconfig
 
-./mach configure --with-macos-sdk=$MOZBUILD_STATE_PATH/MacOSX26.1.sdk
+with_ccache=""
+# Only enable sccache if sccache command is found
+if command -v sccache >&2; then
+    with_ccache="--with-ccache=sccache"
+fi
+
+./mach configure --with-macos-sdk=$MOZBUILD_STATE_PATH/MacOSX26.1.sdk $with_ccache
 ./mach build
 ./mach package
 
 cd ..
 
-rm -rf NEUTRON_INTERNAL_APP_NAME-darwin-x86_64
+if [ -d  NEUTRON_INTERNAL_APP_NAME-darwin-x86_64 ]; then
+    rm -r NEUTRON_INTERNAL_APP_NAME-darwin-x86_64
+fi
+
 mkdir NEUTRON_INTERNAL_APP_NAME-darwin-x86_64
 
 cp -r mozilla-unified/obj-x86_64-apple-darwin/dist/NEUTRON_INTERNAL_APP_NAME/*.app/* NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/

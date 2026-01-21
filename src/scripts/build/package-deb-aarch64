@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -euo pipefail
+
 export TARGET=aarch64-linux-gnu
 export MOZBUILD=$PWD/.mozbuild
 

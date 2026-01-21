@@ -1,7 +1,9 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Build osxcross
-git clone https://github.com/tpoechtrager/osxcross.git --recurse-submodules
+git clone https://github.com/tpoechtrager/osxcross.git --recurse-submodules || true
 cd osxcross
 wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz -O tarballs/MacOSX11.3.sdk.tar.xz
 export MACOSX_DEPLOYMENT_TARGET=10.15
@@ -13,7 +15,9 @@ boost_system_path="$(realpath target/macports/pkgs/opt/local/libexec/boost/1.81/
 boost_thread_path="$(realpath target/macports/pkgs/opt/local/libexec/boost/1.81/lib/libboost_thread-mt.dylib)"
 cd ..
 
-rm -rf src/launch-app/build
+if [ -d src/launch-app/build ]; then
+	rm -rf src/launch-app/build
+fi
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	x86_64-apple-darwin20.4-cmake \

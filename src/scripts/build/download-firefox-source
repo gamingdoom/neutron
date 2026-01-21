@@ -1,16 +1,22 @@
 #!/bin/bash
 
+set -euo pipefail
+
 export MOZBUILD_STATE_PATH=$PWD/.mozbuild
 
 if [ ! -d mozilla-unified ]; then
-	curl https://hg.mozilla.org/mozilla-central/raw-file/default/python/mozboot/bin/bootstrap.py -LO
-	python3 bootstrap.py --vcs=git --no-interactive --application-choice=browser_artifact_mode
-
-	# they renamed mozilla-unified to firefox, so we need to fix that
-	mv firefox mozilla-unified
+	export tag_name=$(
+		git ls-remote --tags https://github.com/mozilla-firefox/firefox.git | \
+		grep -E "^[a-z0-9]{40}	refs/tags/FIREFOX_[0-9]*_[0-9]*(_[0-9]*)?_RELEASE" | \
+		sed "s/refs\/tags\///g" | \
+		awk '{print $2}' | \
+		sort -t_ -k2,2n -k3,3n -k4,4n -k5,5n | \
+		tail -n1
+	)
+	git clone --recursive --depth 1 --branch $tag_name --single-branch --shallow-submodules -j$(nproc) https://github.com/mozilla-firefox/firefox.git mozilla-unified
 
 	cd mozilla-unified
-	git checkout $(git tag | grep -E "^FIREFOX_[0-9]*_[0-9]*(_[0-9]*)?_RELEASE" | sort -V | tail -n1)
+	./mach --no-interactive bootstrap
 
 	echo "Applying universal patches"
 	for patch in ../src/patches/*.patch; do
