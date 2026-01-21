@@ -1,14 +1,5 @@
 --- a/python/mozbuild/mozbuild/repackaging/desktop_file.py
 +++ b/python/mozbuild/mozbuild/repackaging/desktop_file.py
-@@ -164,7 +164,7 @@
-     )
-     if release_type == "nightly":
-         return branding_fluent_filename_template.format(brand="nightly")
--    elif release_type in {"release", "release-rc"}:
-+    elif release_type == "release" or release_type == "release-rc":
-         return branding_fluent_filename_template.format(brand="official")
-     elif release_type == "beta" and release_product == "firefox":
-         return branding_fluent_filename_template.format(brand="official")
 @@ -187,57 +187,15 @@
  
  

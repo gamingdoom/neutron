@@ -176,27 +176,24 @@ int main(int argc, char *argv[]) {
     bool *should_exit = new bool(false);
     bool *should_run_in_background = nullptr;
 
-    tray tray;
+    static tray tray;
     struct tray *tray_ptr = nullptr;
     std::string icon_path;
     WindowStateCtx window_state_ctx = {nullptr, window_state, should_exit, should_run_in_background, &config};
-    // std::thread *tray_runner;
     if (SHOULD_RUN_IN_BACKGROUND){
-        // tray = platform_specific::setup_tray(appDir, instance_guard, window_state, should_exit);
-        // tray_runner = new std::thread([&]{tray->run();});
         icon_path = platform_specific::get_icon_path(appDir);
-        tray = {
-            .icon = const_cast<char*>(icon_path.c_str()),
-            .menu = 
-                (struct tray_menu[]) {
-                    {.text = "Show Window", .disabled = 0, .checked = 1, .cb = window_state_cb, .context = &window_state_ctx, .submenu = NULL},
-                    {.text = "-", .disabled = 0, .cb = NULL, .context = NULL, .submenu = NULL},
-                    {.text = "Run in Background (uses more resources)", .disabled = 0, .checked = 1, .cb = should_run_in_background_cb, .context = &window_state_ctx, .submenu = NULL},
-                    {.text = "Exit", .disabled = 0, .cb = should_exit_cb, .context = &window_state_ctx, .submenu = NULL},
-                    {.text = "-", .disabled = 0, .cb = NULL, .context = NULL, .submenu = NULL},
-                    {.text = NULL, .disabled = 0, .cb = NULL, .context = NULL, .submenu = NULL},
-                }
+        
+        tray.icon = const_cast<char*>(icon_path.c_str());
+        static struct tray_menu tray_menu[] = {
+            {.text = "Show Window", .disabled = 0, .checked = 1, .cb = window_state_cb, .context = &window_state_ctx, .submenu = NULL},
+            {.text = "-", .disabled = 0, .checked = 0, .cb = NULL, .context = NULL, .submenu = NULL},
+            {.text = "Run in Background (uses more resources)", .disabled = 0, .checked = 1, .cb = should_run_in_background_cb, .context = &window_state_ctx, .submenu = NULL},
+            {.text = "Exit", .disabled = 0, .checked = 0, .cb = should_exit_cb, .context = &window_state_ctx, .submenu = NULL},
+            {.text = "-", .disabled = 0, .checked = 0, .cb = NULL, .context = NULL, .submenu = NULL},
+            {.text = NULL, .disabled = 0, .checked = 0, .cb = NULL, .context = NULL, .submenu = NULL},
         };
+        tray.menu = tray_menu;
+        
         tray_ptr = &tray;
 
         window_state = (bool*)&tray.menu[0].checked;

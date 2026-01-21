@@ -120,6 +120,7 @@ def main():
         "src/mozconfig.windows",
         "src/mozconfig.mac-arm",
         "src/mozconfig.mac-intel",
+        "src/mozconfig.android",
 
         "src/scripts/build/launch-app-linux",
         "src/scripts/build/launch-app-linux-aarch64",
@@ -146,6 +147,7 @@ def main():
         "src/scripts/build/windows",
         "src/scripts/build/mac-arm",
         "src/scripts/build/mac-intel",
+        "src/scripts/build/android",
 
         "src/scripts/build/launch-app-linux",
         "src/scripts/build/launch-app-linux-aarch64",
@@ -222,7 +224,7 @@ def main():
             buildable_platforms.append("package-deb-aarch64")
         else:
             buildable_platforms.append(platform)
-            if not platform.startswith("launch-app-"):
+            if not platform.startswith("launch-app-") or platform == "android":
                 buildable_platforms.append(f"launch-app-{platform}")
                 buildable_platforms.append(f"package-{platform}")
 

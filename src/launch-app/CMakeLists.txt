@@ -23,7 +23,7 @@ endif()
 
 add_executable(launch-app ${sources} ${Boost_INCLUDE_DIRS} ${RES_PATH})
 
-target_compile_options(launch-app PRIVATE -std=c++17 -Wall -Wextra -Wno-deprecated-declarations -Wno-unused-parameter -g)
+target_compile_options(launch-app PRIVATE -std=c++17 -Wall -Wextra -Wno-deprecated-declarations -Wno-unused-parameter)
 target_compile_definitions(launch-app PRIVATE APPLICATION_NAME=${APPLICATION_NAME} SHOULD_OPEN_IN_DEFAULT_BROWSER=${SHOULD_OPEN_IN_DEFAULT_BROWSER} SHOULD_RUN_IN_BACKGROUND=${SHOULD_RUN_IN_BACKGROUND})
 
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

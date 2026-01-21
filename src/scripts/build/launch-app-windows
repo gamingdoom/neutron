@@ -8,7 +8,7 @@ rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	cmake \
-		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_SYSTEM_NAME=Windows \
 		-DCMAKE_CXX_FLAGS="-Wno-cast-function-type -static -static-libgcc -static-libstdc++ -mwindows -fpermissive" \
 		-DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \

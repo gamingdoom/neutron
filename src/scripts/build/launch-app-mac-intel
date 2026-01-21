@@ -17,7 +17,7 @@ rm -rf src/launch-app/build
 mkdir src/launch-app/build
 pushd src/launch-app/build
 	x86_64-apple-darwin20.4-cmake \
-		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang) \
 		-DCMAKE_CXX_COMPILER=$(realpath ../../../osxcross/target/bin/o64-clang++) \
 		-DCMAKE_SYSTEM_PROCESSOR=x86_64 \

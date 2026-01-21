@@ -15,7 +15,7 @@ pushd src/launch-app/build
 	export PKG_CONFIG_SYSROOT_DIR="$MOZBUILD/sysroot-$TARGET"
 	export PKG_CONFIG_LIBDIR=$MOZBUILD/sysroot-$TARGET/usr/lib/$TARGET/pkgconfig:$MOZBUILD/sysroot-$TARGET/usr/share/pkgconfig
 	CC=clang CXX=clang++ cmake \
-		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_TOOLCHAIN_FILE=../${TARGET}_toolchain.cmake \
 		.. \
 		-DBOOST_CONTEXT_ARCHITECTURE=arm64 \
