@@ -1,13 +1,9 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Test Build
 
 permissions:
   contents: read
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
@@ -16,14 +12,43 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false # TODO change this once I finish debugging everything
+      matrix:
+        include:
+          - name: linux-x86_64
+            toolchain-name: x86_64-unknown-linux-gnu
+            platforms: linux,deb,appimage
+            artifact-names: ['neutron-test-app-linux-x86_64', 'neutron-test-app-deb-x86_64', 'neutron-test-app-appimage-x86_64']
+            artifact-paths: ['neutron/build/neutron-test-app-linux-x86_64.tar.bz2', 'neutron/build/neutron-test-app-x86_64-*.deb', 'neutron/build/Neutron Test App-x86_64.AppImage'] 
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+          - name: linux-aarch64
+            toolchain-name: aarch64-unknown-linux-gnu
+            platforms: linux-aarch64,deb-aarch64,appimage-aarch64
+            artifact-names: ['neutron-test-app-linux-aarch64', 'neutron-test-app-deb-aarch64', 'neutron-test-app-appimage-aarch64']
+            artifact-paths: ['neutron/build/neutron-test-app-linux-aarch64.tar.bz2', 'neutron/build/neutron-test-app-aarch64-*.deb', 'neutron/build/Neutron Test App-aarch64.AppImage']
+
+          - name: darwin-x86_64
+            toolchain-name: x86_64-apple-darwin
+            platforms: mac-intel
+            artifact-names: ['neutron-test-app-darwin-x86_64', '', '']
+            artifact-paths: ['neutron/build/neutron-test-app-darwin-x86_64.dmg', '', '']
+        
+          - name: darwin-aarch64
+            toolchain-name: aarch64-apple-darwin
+            platforms: mac-arm
+            artifact-names: ['neutron-test-app-darwin-aarch64', '', '']
+            artifact-paths: ['neutron/build/neutron-test-app-darwin-aarch64.dmg', '', '']
+
+          - name: windows-x86_64
+            toolchain-name: x86_64-pc-windows-gnu
+            platforms: windows
+            artifact-names: ['neutron-test-app-windows-x86_64', '', '']
+            artifact-paths: ['neutron/build/neutron-test-app-setup-win64.exe', '', '']
+
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
@@ -40,22 +65,60 @@ jobs:
           large-packages: false
           docker-images: true
           swap-storage: true
-    
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
+      - name: Set up sccache
+        uses: mozilla-actions/sccache-action@v0.0.9
+
+      - name: Restore sccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/sccache
+          key: sccache-${{ matrix.name }}
+
       - uses: actions/checkout@v3
         with:
           submodules: "recursive"
 
-      # Runs a set of commands using the runners shell
-      - name: Install Dependencies
+      - name: Build
         run: |
-          pip install -r requirements.txt
-          rustup target add aarch64-unknown-linux-gnu
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 18
-          
-      # Runs a set of commands using the runners shell
-      - name: Configure and Build
-        run: |
-          python configurator.py -c test/config.json -b
+          # Install deps
+          rustup target add ${{ matrix.toolchain-name }}
+
+          sudo apt install alsa pkg-config libssl-dev msitools
+
+          unset CC CXX
+
+          pip install -r neutron/requirements.txt
+
+          # Prevent runner from running out of RAM
+          export MOZ_PARALLEL_BUILD=2
+
+          cd neutron
+          python configurator.py --config-file=../resources/config.json -p ${{ matrix.platforms }} -b
+
+      - name: Upload sccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/sccache
+          key: sccache-${{ matrix.name }}
+
+      - name: Upload artifact 1
+        if: ${{ matrix['artifact-paths'][0] != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix['artifact-names'][0] }}
+          path: ${{ matrix['artifact-paths'][0] }}
+
+      - name: Upload artifact 2
+        if: ${{ matrix['artifact-paths'][1] != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix['artifact-names'][1] }}
+          path: ${{ matrix['artifact-paths'][1] }}
+
+      - name: Upload artifact 3
+        if: ${{ matrix['artifact-paths'][2] != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix['artifact-names'][2] }}
+          path: ${{ matrix['artifact-paths'][2] }}
