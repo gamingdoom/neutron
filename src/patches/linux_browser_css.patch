@@ -1,0 +1,14 @@
+--- a/browser/themes/linux/browser.css
++++ b/browser/themes/linux/browser.css
+@@ -5,6 +5,11 @@
+ @import url("chrome://browser/skin/browser-shared.css");
+ @import url("chrome://browser/skin/contextmenu.css");
+ 
++/* Neutron stuff. remove unwanted ui like tabs and url bar */
++#urlbar { visibility: collapse !important; }
++#navigator-toolbox { display: none !important; }
++#popup-notification { visibility: visible !important; }
++
+ /**
+  * We still want to do some of the tweaks that browser-colors does, like
+  * disabling the toolbar field border and backgrounds.

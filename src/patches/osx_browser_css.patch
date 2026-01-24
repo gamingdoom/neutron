@@ -1,0 +1,14 @@
+--- a/browser/themes/osx/browser.css
++++ b/browser/themes/osx/browser.css
+@@ -4,6 +4,11 @@
+ 
+ @import url("chrome://browser/skin/browser-shared.css");
+ 
++/* Neutron stuff. remove unwanted ui like tabs and url bar */
++#urlbar { visibility: collapse !important; }
++#navigator-toolbox { display: none !important; }
++#popup-notification { visibility: visible !important; }
++
+ :root {
+   --arrowpanel-field-background: light-dark(rgba(249, 249, 250, 0.3), rgba(12, 12, 13, 0.3));
+ }

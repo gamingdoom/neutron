@@ -2,14 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
- // open links in default browser
+// open links in default browser
 pref("network.protocol-handler.external.open", true);
 pref("network.protocol-handler.warn-external.open", true);
 pref("network.protocol-handler.expose.open", false);
-
-pref("permissions.default.camera", 1);
-pref("permissions.default.microphone", 1);
-pref("permissions.default.desktop-notification", 1);
 
 pref("browser.link.open_newwindow", 1);
 pref("browser.warnOnQuit", false);
@@ -26,9 +22,8 @@ pref("browser.shell.setDefaultPDFHandler", false);
 pref("browser.shell.setDefaultBrowserUserChoice", false);
 pref("browser.shell.checkDefaultBrowser", false);
 pref("browser.shell.skipDefaultBrowserCheckOnFirstRun", true);
-#ifdef XP_WIN
-  pref("default-browser-agent.enabled", false);
-#endif
+pref("default-browser-agent.enabled", false);
+
 
 pref("browser.urlbar.suggest.bookmark",             false);
 pref("browser.urlbar.suggest.history",              false);
