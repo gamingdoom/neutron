@@ -116,10 +116,10 @@ jobs:
 
           unset CC CXX
 
-          pip install -r neutron/requirements.txt
+          pip install -r requirements.txt
 
           cd neutron
-          python configurator.py --config-file=../resources/config.json -p ${{ matrix.platforms }} -b
+          python configurator.py --config-file=test/config.json -p ${{ matrix.platforms }} -b
 
       - name: Upload sccache
         uses: actions/cache/save@v4
