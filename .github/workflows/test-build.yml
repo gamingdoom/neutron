@@ -118,7 +118,6 @@ jobs:
 
           pip install -r requirements.txt
 
-          cd neutron
           python configurator.py --config-file=test/config.json -p ${{ matrix.platforms }} -b
 
       - name: Upload sccache
