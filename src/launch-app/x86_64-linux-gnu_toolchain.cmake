@@ -10,5 +10,5 @@ set(CMAKE_ASM_COMPILER /usr/bin/$ENV{TARGET}-gcc)
 
 set(CMAKE_C_FLAGS   "--target=$ENV{TARGET} --gcc-toolchain=${CMAKE_SYSROOT}/usr" CACHE STRING "" FORCE)
 set(CMAKE_CXX_FLAGS "-fpermissive --target=$ENV{TARGET} --gcc-toolchain=${CMAKE_SYSROOT}/usr" CACHE STRING "" FORCE)
-set(CMAKE_SHARED_LINKER_FLAGS "--target=$ENV{TARGET} --gcc-toolchain=${CMAKE_SYSROOT}/usr --build-id=md5" CACHE STRING "" FORCE)
+set(CMAKE_SHARED_LINKER_FLAGS "--target=$ENV{TARGET} --gcc-toolchain=${CMAKE_SYSROOT}/usr --build-id=sha1" CACHE STRING "" FORCE)
 set(CMAKE_LINKER_TYPE LLD CACHE STRING "" FORCE)
