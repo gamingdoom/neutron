@@ -116,6 +116,8 @@ jobs:
 
           unset CC CXX
 
+          printf "\n\noverride_dh_strip:\n\t#nop" >> src/packages/debian/rules
+
           pip install -r requirements.txt
 
           python configurator.py --config-file=test/config.json -p ${{ matrix.platforms }} -b
