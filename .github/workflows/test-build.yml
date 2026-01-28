@@ -126,6 +126,10 @@ jobs:
           pip install -r requirements.txt
 
           python configurator.py --config-file=test/config.json -p ${{ matrix.platforms }} -b
+          
+          # Remove swapfile
+          sudo swapoff swapfile
+          sudo rm -f swapfile
 
       - name: Upload sccache
         uses: actions/cache/save@v4
