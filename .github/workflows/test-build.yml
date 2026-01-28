@@ -23,31 +23,31 @@ jobs:
             toolchain-name: x86_64-unknown-linux-gnu
             platforms: linux,deb,appimage
             artifact-names: ['neutron-test-app-linux-x86_64', 'neutron-test-app-deb-x86_64', 'neutron-test-app-appimage-x86_64']
-            artifact-paths: ['neutron/build/neutron-test-app-linux-x86_64.tar.bz2', 'neutron/build/neutron-test-app-x86_64-*.deb', 'neutron/build/Neutron Test App-x86_64.AppImage'] 
+            artifact-paths: ['build/neutron-test-app-linux-x86_64.tar.bz2', 'build/neutron-test-app-x86_64-*.deb', 'build/Neutron Test App-x86_64.AppImage'] 
 
           - name: linux-aarch64
             toolchain-name: aarch64-unknown-linux-gnu
             platforms: linux-aarch64,deb-aarch64,appimage-aarch64
             artifact-names: ['neutron-test-app-linux-aarch64', 'neutron-test-app-deb-aarch64', 'neutron-test-app-appimage-aarch64']
-            artifact-paths: ['neutron/build/neutron-test-app-linux-aarch64.tar.bz2', 'neutron/build/neutron-test-app-aarch64-*.deb', 'neutron/build/Neutron Test App-aarch64.AppImage']
+            artifact-paths: ['build/neutron-test-app-linux-aarch64.tar.bz2', 'build/neutron-test-app-aarch64-*.deb', 'build/Neutron Test App-aarch64.AppImage']
 
           - name: darwin-x86_64
             toolchain-name: x86_64-apple-darwin
             platforms: mac-intel
             artifact-names: ['neutron-test-app-darwin-x86_64', '', '']
-            artifact-paths: ['neutron/build/neutron-test-app-darwin-x86_64.dmg', '', '']
+            artifact-paths: ['build/neutron-test-app-darwin-x86_64.dmg', '', '']
         
           - name: darwin-aarch64
             toolchain-name: aarch64-apple-darwin
             platforms: mac-arm
             artifact-names: ['neutron-test-app-darwin-aarch64', '', '']
-            artifact-paths: ['neutron/build/neutron-test-app-darwin-aarch64.dmg', '', '']
+            artifact-paths: ['build/neutron-test-app-darwin-aarch64.dmg', '', '']
 
           - name: windows-x86_64
             toolchain-name: x86_64-pc-windows-gnu
             platforms: windows
             artifact-names: ['neutron-test-app-windows-x86_64', '', '']
-            artifact-paths: ['neutron/build/neutron-test-app-setup-win64.exe', '', '']
+            artifact-paths: ['build/neutron-test-app-setup-win64.exe', '', '']
 
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -100,27 +100,22 @@ jobs:
           sudo swapon swapfile
 
           # Patch openssl.cnf for osxcross-macports to enable ripemd160
-          sudo bash -c 'sed -i "s/\[provider_sect\]/\[provider_sect\]\nlegacy = legacy_sect/g" /etc/ssl/openssl.cnf'
+          sudo bash -c 'sed -i "s/^\[provider_sect\]/\[provider_sect\]\nlegacy = legacy_sect/g" /etc/ssl/openssl.cnf'
+          sudo bash -c 'sed -i "s/^# activate = 1/activate = 1/g" /etc/ssl/openssl.cnf'
           sudo bash -c 'printf "\n[legacy_sect]\nactivate = 1\n" >> /etc/ssl/openssl.cnf'
 
           # Install deps
           rustup target add ${{ matrix.toolchain-name }}
 
-          sudo apt install alsa pkg-config libssl-dev msitools debhelper
+          sudo apt install alsa pkg-config libssl-dev msitools debhelper binutils-mingw-w64-x86-64
 
-          if (( ${{ matrix.name }} == "linux-aarch64" )); then
+          if [ "${{ matrix.name }}" == "linux-aarch64" ]; then
             sudo apt install gcc-aarch64-linux-gnu
-
-            wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-aarch64.AppImage
-            chmod +x appimagetool-aarch64.AppImage
-            sudo ln -s $PWD/appimagetool-aarch64.AppImage /usr/bin/appimagetool || true
           fi
 
-          if (( ${{ matrix.name }} == "linux-x86_64" )); then
-            wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
-            chmod +x appimagetool-x86_64.AppImage
-            sudo ln -s $PWD/appimagetool-x86_64.AppImage /usr/bin/appimagetool || true
-          fi
+          wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          sudo ln -s $PWD/appimagetool-x86_64.AppImage /usr/bin/appimagetool || true
           
           sudo apt-get clean
 
