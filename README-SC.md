@@ -1,25 +1,4 @@
-<!--
-<br />
-
-<div align="center">
-  <a href="https://github.com/gamingdoom/datcord">
-    <img src="src/changed/browser/branding/datcord/default256.png" alt="Logo" width="80" height="80">
-  </a>
--->
-  <h3 align="center">Neutron</h3>
-<!--
-  <p align="center">
-    A tool for embedding a website into a desktop app that uses Gecko 
-    <br/>
-    <br/>
-    <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/gamingdoom/datcord"> 
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/gamingdoom/datcord/total"> 
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/gamingdoom/datcord/build-linux-x86_64.yml?branch=master&label=Linux%20%20Build"> 
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/gamingdoom/datcord/build-win64.yml?branch=master&label=Windows%20%20Build"> 
-    <img alt="GitHub" src="https://img.shields.io/github/license/gamingdoom/datcord">
-  </p>
-</div>
--->
+<h1 align="center">Neutron</h1>
 
 [English](./README.md) | 简体中文 | [繁体中文](./README-TC.md)
 
