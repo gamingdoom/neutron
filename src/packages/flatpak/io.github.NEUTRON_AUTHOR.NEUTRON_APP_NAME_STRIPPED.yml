@@ -1,0 +1,105 @@
+app-id: io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+
+sdk: org.freedesktop.Sdk
+sdk-extensions: 
+  - org.freedesktop.Sdk.Extension.llvm20
+  - org.freedesktop.Sdk.Extension.node20
+  - org.freedesktop.Sdk.Extension.rust-stable
+
+command: NEUTRON_INTERNAL_APP_NAME
+
+finish-args:
+    - --share=ipc                                             
+    - --share=network                                         
+    - --env=GTK_PATH=/app/lib/gtkmodules                      
+    - --socket=pulseaudio                                     
+    - --socket=wayland                                        
+    - --socket=fallback-x11                                                                           
+    - --persist=.NEUTRON_INTERNAL_APP_NAME                                      
+    - --filesystem=xdg-download:rw                                   
+    - --device=all                                            
+    - --talk-name=org.freedesktop.FileManager1                
+    - --talk-name=org.a11y.Bus                                
+    - --talk-name=org.gnome.SessionManager                    
+    - --talk-name=org.freedesktop.ScreenSaver                 
+    - --talk-name=org.freedesktop.Notifications
+
+build-options:
+  strip: false
+  no-debuginfo: true
+
+modules:
+- shared-modules/dbus-glib/dbus-glib.json
+- libcanberra/libcanberra.json
+- shared-modules/intltool/intltool-0.51.json
+- shared-modules/libappindicator/libappindicator-gtk3-12.10.json
+# These 3 are copied from Firefox Base App
+- kerberos.json
+- libnotify.json
+- sound-theme-freedesktop.json
+# Python deps
+- python3-modules.json
+
+- name: cbindgen
+  buildsystem: simple
+  build-options:
+    append-path: "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm20/bin"
+    env:
+      - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+      - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
+      - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+      - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
+
+  build-commands:
+    # Setting cargo home in env didn't work for some reason
+    - CARGO_HOME=${PWD}/cargo cargo update -p clap --precise 4.3.24
+    - CARGO_HOME=${PWD}/cargo cargo --offline fetch --manifest-path Cargo.toml --verbose
+    - CARGO_HOME=${PWD}/cargo cargo --offline build --release --verbose
+    - install -Dm755 ./target/release/cbindgen -t /app/bin/
+
+  sources:
+    # Cbindgen and dependencies
+    - type: git
+      url: https://github.com/mozilla/cbindgen.git
+      tag: "v0.29.2"
+
+    - cbindgen-cargo-sources.json
+  
+- name: NEUTRON_INTERNAL_APP_NAME
+  buildsystem: simple
+  build-options:
+    append-path: "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm20/bin:/usr/lib/sdk/node20/bin"
+    env:
+      - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+      - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
+      - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+      - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
+
+  build-commands:
+    # Install everything
+    - chmod +x NEUTRON_INTERNAL_APP_NAME-linux/launch-app
+    - chmod +x NEUTRON_INTERNAL_APP_NAME-linux/open-in-default-browser
+    - mkdir -p /app/lib/NEUTRON_INTERNAL_APP_NAME
+    - cp -r NEUTRON_INTERNAL_APP_NAME-linux/* /app/lib/NEUTRON_INTERNAL_APP_NAME
+
+    - ln -s /app/lib/NEUTRON_INTERNAL_APP_NAME/launch-app /app/bin/NEUTRON_INTERNAL_APP_NAME
+
+    - install -Dm 644 -t /app/share/applications/ io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.desktop
+    - install -Dm 644 -t /app/share/metainfo io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.metainfo.xml
+
+    - install -Dm 644 default256.png /app/share/icons/hicolor/256x256/apps/io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.png
+
+  sources:
+    - type: dir
+      path: ../../../NEUTRON_INTERNAL_APP_NAME-linux
+
+    - type: file
+      path: ../../../src/changed/browser/branding/NEUTRON_INTERNAL_APP_NAME/default256.png
+
+    - type: file
+      path: io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.desktop
+    
+    - type: file
+      path: io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.metainfo.xml

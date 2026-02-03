@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from datetime import datetime
 import json
 from PIL import Image
 from cairosvg import svg2png
@@ -31,14 +32,21 @@ def build(component: str) -> bool:
 
 def replace_placeholders(placeholder_files: list[str], placeholders: dict[str, str]) -> None:
     for file in placeholder_files:
+        file_name = os.path.basename(file)
+
         for placeholder, value in placeholders.items():
             replaceTextInFile(file, placeholder, value)
+
+            # Also replace placeholders in file names
+            if placeholder in file_name:
+                file_name = file_name.replace(placeholder, value)
+        
+        os.rename(file, os.path.join(os.path.dirname(file), file_name))
+        
 
 def main():
     with open("config.json", "r") as f:
         appinfo = json.load(f)
-
-    # Make changes to firefox
 
     # Create branding
     shutil.copytree("src/branding-template", f"src/changed/browser/branding/{appinfo['internalAppName']}", dirs_exist_ok=True)
@@ -120,12 +128,14 @@ def main():
         "src/mozconfig.windows",
         "src/mozconfig.mac-arm",
         "src/mozconfig.mac-intel",
+        "src/mozconfig.flatpak",
 
         "src/scripts/build/launch-app-linux",
         "src/scripts/build/launch-app-linux-aarch64",
         "src/scripts/build/launch-app-windows",
         "src/scripts/build/launch-app-mac-arm",
         "src/scripts/build/launch-app-mac-intel",
+        "src/scripts/build/launch-app-flatpak",
 
         "src/windows/app.rc",
         "src/windows/setup.nsi",
@@ -146,12 +156,14 @@ def main():
         "src/scripts/build/windows",
         "src/scripts/build/mac-arm",
         "src/scripts/build/mac-intel",
+        "src/scripts/build/flatpak",
 
         "src/scripts/build/launch-app-linux",
         "src/scripts/build/launch-app-linux-aarch64",
         "src/scripts/build/launch-app-windows",
         "src/scripts/build/launch-app-mac-arm",
         "src/scripts/build/launch-app-mac-intel",
+        "src/scripts/build/launch-app-flatpak",
 
         "src/packages/appimage/neutron.AppImage/neutron.desktop",
         "src/packages/appimage/neutron.AppImage/AppRun",
@@ -159,6 +171,10 @@ def main():
         "src/packages/debian/install.in",
         "src/packages/debian/control.in",
         "src/packages/debian/distribution.ini",
+
+        "src/packages/flatpak/io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.yml",
+        "src/packages/flatpak/io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.metainfo.xml",
+        "src/packages/flatpak/io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.desktop",
 
         "src/scripts/build/package-linux",
         "src/scripts/build/package-linux-aarch64",
@@ -169,10 +185,12 @@ def main():
         "src/scripts/build/package-windows",
         "src/scripts/build/package-mac-arm",
         "src/scripts/build/package-mac-intel",
+        "src/scripts/build/package-flatpak",
     ]
 
     placeholders = {
         "NEUTRON_INTERNAL_APP_NAME": appinfo["internalAppName"],
+        "NEUTRON_APP_NAME_STRIPPED": appinfo["appName"].replace(" ", ""),
         "NEUTRON_APP_NAME": appinfo["appName"],
         "NEUTRON_APP_URL": appinfo["url"],
         "NEUTRON_PROJECT_URL": appinfo["projectURL"],
@@ -184,6 +202,7 @@ def main():
         "NEUTRON_SHOULD_OPEN_IN_DEFAULT_BROWSER": str(int(appinfo["openInDefaultBrowser"])),
         "NEUTRON_AUTHOR": appinfo["author"],
         "NEUTRON_PROJECT_DESCRIPTION": appinfo["projectDescription"],
+        "NEUTRON_CURRENT_DATE": datetime.now().strftime("%Y-%m-%d"),
     }
 
     if appinfo["openInDefaultBrowser"]:

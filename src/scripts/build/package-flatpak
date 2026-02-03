@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -euo pipefail
+
+pushd src/packages/flatpak
+    flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo builddir io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.yml
+    flatpak build-bundle repo ../../../NEUTRON_INTERNAL_APP_NAME.flatpak io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+popd

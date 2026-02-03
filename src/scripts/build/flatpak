@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -euo pipefail
+shopt -s extglob
+
+export MOZBUILD_STATE_PATH=$PWD/.mozbuild
+
+cd mozilla-unified
+
+cp -r ../src/changed/* .
+cp ../src/mozconfig.flatpak mozconfig
+
+with_ccache=""
+# Only enable sccache if sccache command is found
+if command -v sccache >&2; then
+    with_ccache="--with-ccache=sccache"
+fi
+
+export CXXFLAGS="-fno-exceptions" 
+./mach configure --without-wasm-sandboxed-libraries $with_ccache
+./mach build
+./mach package
+
+cd ..
+
+if [ -d  NEUTRON_INTERNAL_APP_NAME-linux ]; then
+    rm -r NEUTRON_INTERNAL_APP_NAME-linux
+fi
+mkdir NEUTRON_INTERNAL_APP_NAME-linux
+tar --strip-components=1 -xvf  mozilla-unified/obj-*-linux-gnu/dist/*.tar.@(bz2|xz) -C NEUTRON_INTERNAL_APP_NAME-linux/
+cp -r src/distribution/ NEUTRON_INTERNAL_APP_NAME-linux/
+mv NEUTRON_INTERNAL_APP_NAME-linux/distribution/policies-flatpak.json NEUTRON_INTERNAL_APP_NAME-linux/distribution/policies.json
+cp src/open-in-default-browser/open-in-default-browser NEUTRON_INTERNAL_APP_NAME-linux/open-in-default-browser
+
+mv NEUTRON_INTERNAL_APP_NAME-linux NEUTRON_INTERNAL_APP_NAME-linux_
+mkdir NEUTRON_INTERNAL_APP_NAME-linux
+mv NEUTRON_INTERNAL_APP_NAME-linux_ NEUTRON_INTERNAL_APP_NAME-linux/NEUTRON_INTERNAL_APP_NAME-linux

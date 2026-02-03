@@ -12,7 +12,8 @@
         "deb-aarch64",
         "windows",
         "mac-arm",
-        "mac-intel"
+        "mac-intel",
+        "flatpak"
     ],
     "extensionURLs": [
         "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION"

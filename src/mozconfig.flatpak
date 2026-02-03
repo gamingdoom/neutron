@@ -1,0 +1,10 @@
+ac_add_options --with-app-name=NEUTRON_INTERNAL_APP_NAME
+ac_add_options --with-branding=browser/branding/NEUTRON_INTERNAL_APP_NAME
+
+ac_add_options --with-unsigned-addon-scopes=app,system
+export MOZ_REQUIRE_SIGNING=
+
+ac_add_options --disable-debug
+ac_add_options --enable-optimize
+
+export MOZ_UPDATER=0

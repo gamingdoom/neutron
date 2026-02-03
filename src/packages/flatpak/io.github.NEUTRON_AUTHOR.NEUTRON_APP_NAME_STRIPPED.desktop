@@ -1,10 +1,6 @@
 [Desktop Entry]
 Name=NEUTRON_APP_NAME
 Exec=NEUTRON_INTERNAL_APP_NAME
-Icon=icon256
+Icon=io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED
 Type=Application
 Categories=Network
-Comment=
-Path=
-Terminal=false
-StartupNotify=false

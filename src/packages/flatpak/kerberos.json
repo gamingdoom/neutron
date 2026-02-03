@@ -1,0 +1,29 @@
+{
+    "name": "kerberos",
+    "subdir": "src",
+    "config-opts": [
+            "--localstatedir=/var/lib",
+            "--sbindir=${FLATPAK_DEST}/bin",
+            "--disable-rpath",
+            "--disable-static"
+    ],
+    "post-install": [
+        "install -Dm644 ../krb5.conf -t ${FLATPAK_DEST}/etc/"
+    ],
+    "sources": [
+        {
+            "type": "archive",
+            "url": "https://kerberos.org/dist/krb5/1.22/krb5-1.22.1.tar.gz",
+            "sha256": "1a8832b8cad923ebbf1394f67e2efcf41e3a49f460285a66e35adec8fa0053af"
+        },
+        {
+            "type": "file",
+            "path": "krb5.conf"
+        }
+    ],
+    "cleanup": [
+        "/bin",
+        "/share/et",
+        "/share/examples"
+    ]
+}

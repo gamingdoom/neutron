@@ -1,3 +1,6 @@
 [submodule "src/launch-app/extern/boost"]
 	path = src/launch-app/extern/boost
 	url = https://github.com/boostorg/boost.git
+[submodule "src/packages/flatpak/shared-modules"]
+	path = src/packages/flatpak/shared-modules
+	url = https://github.com/flathub/shared-modules.git
