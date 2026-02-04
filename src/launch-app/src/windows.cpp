@@ -1,6 +1,12 @@
 #ifdef _WIN32
-#include <filesystem>
+
+#define WINVER 0x0600
+#define _WIN32_WINNT 0x0600
+#define NTDDI_VERSION 0x06000000
+#include <windows.h>
 #include <shlobj.h>
+
+#include <filesystem>
 #include <string>
 #include <fstream>
 #include <iostream>
