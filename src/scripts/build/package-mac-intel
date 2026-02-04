@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-mkdir "NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/NEUTRON_APP_NAME.app"
-mv NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents "NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/NEUTRON_APP_NAME.app/"
+mkdir "NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/NEUTRON_APP_NAME_STRIPPED.app"
+mv NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/Contents "NEUTRON_INTERNAL_APP_NAME-darwin-x86_64/NEUTRON_APP_NAME_STRIPPED.app/"
 
 if [ -f NEUTRON_INTERNAL_APP_NAME-darwin-x86_64.dmg ]; then
     rm NEUTRON_INTERNAL_APP_NAME-darwin-x86_64.dmg
 fi
-mozilla-unified/mach python -m mozbuild.action.make_dmg NEUTRON_INTERNAL_APP_NAME-darwin-x86_64 NEUTRON_INTERNAL_APP_NAME-darwin-x86_64.dmg --volume-name="NEUTRON_APP_NAME" --dsstore=src/branding-template/dsstore
+mozilla-unified/mach python -m mozbuild.action.make_dmg NEUTRON_INTERNAL_APP_NAME-darwin-x86_64 NEUTRON_INTERNAL_APP_NAME-darwin-x86_64.dmg --volume-name="NEUTRON_APP_NAME_STRIPPED" --dsstore=src/branding-template/dsstore

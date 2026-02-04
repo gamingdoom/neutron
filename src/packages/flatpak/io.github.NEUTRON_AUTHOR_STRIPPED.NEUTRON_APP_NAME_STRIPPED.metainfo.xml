@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED</id>
+  <id>io.github.NEUTRON_AUTHOR_STRIPPED.NEUTRON_APP_NAME_STRIPPED</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>NEUTRON_APP_NAME</name>
@@ -11,10 +11,10 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.desktop</launchable>
+  <launchable type="desktop-id">io.github.NEUTRON_AUTHOR_STRIPPED.NEUTRON_APP_NAME_STRIPPED.desktop</launchable>
 
   <url type="homepage">NEUTRON_PROJECT_URL</url>
-  <developer_name>NEUTRON_AUTHOR</developer_name>
+  <developer_name>NEUTRON_AUTHOR_STRIPPED</developer_name>
 
   <releases>
     <release version="NEUTRON_VERSION" date="NEUTRON_CURRENT_DATE"/>

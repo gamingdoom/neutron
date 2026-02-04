@@ -43,6 +43,31 @@ def replace_placeholders(placeholder_files: list[str], placeholders: dict[str, s
         
         os.rename(file, os.path.join(os.path.dirname(file), file_name))
         
+def make_alphanumeric(s: str, replace_spaces: bool = True) -> str:
+    out = ""
+    for c in s.strip():
+        if c.isalnum() or c == "_":
+            out += c
+        if c == " " or c == "-":
+            if replace_spaces:
+                out += "_"
+            else:
+                out += c
+
+    return out
+
+def remove_unsafe_characters(s: str) -> str:
+    out = ""
+    for c in s:
+        if c in "\\/:*?\"'<>|$()":
+            out += "_"
+        else:
+            out += c
+
+    return out
+
+def sanitize(s: str, replace_spaces: bool = True) -> str:
+    return remove_unsafe_characters(make_alphanumeric(s.strip(), replace_spaces = replace_spaces))
 
 def main():
     with open("config.json", "r") as f:
@@ -105,9 +130,6 @@ def main():
         im = Image.open("temp.png")
         im.save(path)
         os.remove("temp.png")
-
-    # # Create the disk icon that shows up when you mount the dmg
-    # im = Image.open(f"src/changed/browser/branding/{appinfo['internalAppName']}/disk.icns")
     
     # I made changes to the config format so lets fix old configs.
     if "NEUTRON_OPEN_IN_DEFAULT_BROWSER_EXTENSION_LOCATION" in appinfo["extensionURLs"]:
@@ -172,9 +194,9 @@ def main():
         "src/packages/debian/control.in",
         "src/packages/debian/distribution.ini",
 
-        "src/packages/flatpak/io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.yml",
-        "src/packages/flatpak/io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.metainfo.xml",
-        "src/packages/flatpak/io.github.NEUTRON_AUTHOR.NEUTRON_APP_NAME_STRIPPED.desktop",
+        "src/packages/flatpak/io.github.NEUTRON_AUTHOR_STRIPPED.NEUTRON_APP_NAME_STRIPPED.yml",
+        "src/packages/flatpak/io.github.NEUTRON_AUTHOR_STRIPPED.NEUTRON_APP_NAME_STRIPPED.metainfo.xml",
+        "src/packages/flatpak/io.github.NEUTRON_AUTHOR_STRIPPED.NEUTRON_APP_NAME_STRIPPED.desktop",
 
         "src/scripts/build/package-linux",
         "src/scripts/build/package-linux-aarch64",
@@ -189,9 +211,9 @@ def main():
     ]
 
     placeholders = {
-        "NEUTRON_INTERNAL_APP_NAME": appinfo["internalAppName"],
-        "NEUTRON_APP_NAME_STRIPPED": appinfo["appName"].replace(" ", ""),
-        "NEUTRON_APP_NAME": appinfo["appName"],
+        "NEUTRON_INTERNAL_APP_NAME": sanitize(appinfo["internalAppName"]),
+        "NEUTRON_APP_NAME_STRIPPED": sanitize(appinfo["appName"].replace(" ", "")),
+        "NEUTRON_APP_NAME": sanitize(appinfo["appName"], replace_spaces = False),
         "NEUTRON_APP_URL": appinfo["url"],
         "NEUTRON_PROJECT_URL": appinfo["projectURL"],
         "NEUTRON_PROJECT_HELP_URL": appinfo["projectHelpURL"],
@@ -200,10 +222,13 @@ def main():
         "NEUTRON_APP_VERSION": appinfo["version"],
         "NEUTRON_EXTENSION_URLS": str(appinfo["extensionURLs"]).replace("'", '"'),
         "NEUTRON_SHOULD_OPEN_IN_DEFAULT_BROWSER": str(int(appinfo["openInDefaultBrowser"])),
-        "NEUTRON_AUTHOR": appinfo["author"],
+        "NEUTRON_AUTHOR_STRIPPED": sanitize(appinfo["author"].replace(" ", "")),
+        "NEUTRON_AUTHOR": sanitize(appinfo["author"], replace_spaces = False),
         "NEUTRON_PROJECT_DESCRIPTION": appinfo["projectDescription"],
         "NEUTRON_CURRENT_DATE": datetime.now().strftime("%Y-%m-%d"),
     }
+
+    print(placeholders)
 
     if appinfo["openInDefaultBrowser"]:
         placeholder_files.append("src/open-in-default-browser/open-in-default-browser-ext/extension/replaceLinks.js")

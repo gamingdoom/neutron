@@ -3,8 +3,6 @@ import json
 import re
 import os
 import shutil
-import subprocess
-import sys
 import argparse
 
 
@@ -57,6 +55,32 @@ parser.add_argument(
     required=False
 )
 
+def make_alphanumeric(s: str, replace_spaces: bool = True) -> str:
+    out = ""
+    for c in s.strip():
+        if c.isalnum() or c == "_":
+            out += c
+        if c == " " or c == "-":
+            if replace_spaces:
+                out += "_"
+            else:
+                out += c
+
+    return out
+
+def remove_unsafe_characters(s: str) -> str:
+    out = ""
+    for c in s:
+        if c in "\\/:*?\"'<>|$()":
+            out += "_"
+        else:
+            out += c
+
+    return out
+
+def sanitize(s: str, replace_spaces: bool = True) -> str:
+    return remove_unsafe_characters(make_alphanumeric(s.strip(), replace_spaces = replace_spaces))
+
 def main(args: argparse.Namespace):
     if args.language:
         global language_string_dict
@@ -70,8 +94,8 @@ def main(args: argparse.Namespace):
 
     if not args.config_file:
         appinfo = {}
-        appinfo["appName"] = input(_("INPUT-APPNAME"))
-        appinfo["internalAppName"] = appinfo["appName"].replace(" ", "-").lower()
+        appinfo["appName"] = sanitize(input(_("INPUT-APPNAME")), replace_spaces=False)
+        appinfo["internalAppName"] = sanitize(appinfo["appName"]).lower()
         appinfo["url"] = input(_("INPUT-APP-URL"))
         appinfo["logoSvgFilePath"] = os.path.abspath(input(_("INPUT-LOGOSVG-PATH")))
 
@@ -95,7 +119,7 @@ def main(args: argparse.Namespace):
                 appinfo["extensionURLs"] = []
 
         appinfo["version"] = input(_("INPUT-VERSION"))
-        appinfo["author"] = input(_("INPUT-AUTHOR"))
+        appinfo["author"] = sanitize(input(_("INPUT-AUTHOR")))
         appinfo["projectDescription"] = input(_("INPUT-DESCRIPTION"))
         appinfo["projectURL"] = input(_("INPUT-PROJECT-URL"))
         appinfo["projectHelpURL"] = input(_("INPUT-PROJECT-HELP-URL"))
@@ -150,7 +174,7 @@ def main(args: argparse.Namespace):
     if not os.path.exists("build"):
         os.mkdir("build")
 
-
+    print("Copying files to build directory...")
     shutil.copyfile("src/scripts/build.py", "build/build.py")
     shutil.copytree("src", "build/src", dirs_exist_ok=True)
 

@@ -20,14 +20,40 @@ parser.add_argument(
     help="Output directory."
 )
 
+def make_alphanumeric(s: str, replace_spaces: bool = True) -> str:
+    out = ""
+    for c in s.strip():
+        if c.isalnum() or c == "_":
+            out += c
+        if c == " " or c == "-":
+            if replace_spaces:
+                out += "_"
+            else:
+                out += c
+
+    return out
+
+def remove_unsafe_characters(s: str) -> str:
+    out = ""
+    for c in s:
+        if c in "\\/:*?\"'<>|$()":
+            out += "_"
+        else:
+            out += c
+
+    return out
+
+def sanitize(s: str, replace_spaces: bool = True) -> str:
+    return remove_unsafe_characters(make_alphanumeric(s.strip(), replace_spaces = replace_spaces))
+
 def main(args: argparse.Namespace):
     manifest = requests.get(args.manifest).json()
     base_dir = "/".join(args.manifest.split("/")[:-1])
     
     config = {}
 
-    config["appName"] = manifest["name"] if "name" in manifest else manifest["short_name"]
-    config["internalAppName"] = manifest["short_name"].replace(" ", "-").lower() if "short_name" in manifest else manifest["name"].replace(" ", "-").lower()
+    config["appName"] = sanitize(manifest["name"], replace_spaces = False) if "name" in manifest else sanitize(manifest["short_name"], replace_spaces = False)
+    config["internalAppName"] = sanitize(manifest["short_name"]).lower() if "short_name" in manifest else sanitize(manifest["name"]).lower()
     config["url"] = base_dir + ("/" if not manifest["start_url"].startswith("/") else "") + manifest["start_url"]
 
     config["version"] = "1.0.0"
@@ -57,6 +83,7 @@ def main(args: argparse.Namespace):
         "linux-aarch64",
         "appimage-aarch64",
         "deb-aarch64",
+        "flatpak",
         "windows",
         "mac-arm",
         "mac-intel"
