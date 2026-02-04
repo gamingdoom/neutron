@@ -73,6 +73,10 @@ def main():
     with open("config.json", "r") as f:
         appinfo = json.load(f)
 
+    appinfo["internalAppName"] = sanitize(appinfo["appName"]).lower()
+    appinfo["appName"] = sanitize(appinfo["appName"], replace_spaces = False)
+    appinfo["author"] = sanitize(appinfo["author"], replace_spaces = False)
+
     # Create branding
     shutil.copytree("src/branding-template", f"src/changed/browser/branding/{appinfo['internalAppName']}", dirs_exist_ok=True)
     
@@ -211,9 +215,9 @@ def main():
     ]
 
     placeholders = {
-        "NEUTRON_INTERNAL_APP_NAME": sanitize(appinfo["internalAppName"]),
-        "NEUTRON_APP_NAME_STRIPPED": sanitize(appinfo["appName"].replace(" ", "")),
-        "NEUTRON_APP_NAME": sanitize(appinfo["appName"], replace_spaces = False),
+        "NEUTRON_INTERNAL_APP_NAME": appinfo["internalAppName"],
+        "NEUTRON_APP_NAME_STRIPPED": appinfo["appName"].replace(" ", ""),
+        "NEUTRON_APP_NAME": appinfo["appName"],
         "NEUTRON_APP_URL": appinfo["url"],
         "NEUTRON_PROJECT_URL": appinfo["projectURL"],
         "NEUTRON_PROJECT_HELP_URL": appinfo["projectHelpURL"],
@@ -222,13 +226,11 @@ def main():
         "NEUTRON_APP_VERSION": appinfo["version"],
         "NEUTRON_EXTENSION_URLS": str(appinfo["extensionURLs"]).replace("'", '"'),
         "NEUTRON_SHOULD_OPEN_IN_DEFAULT_BROWSER": str(int(appinfo["openInDefaultBrowser"])),
-        "NEUTRON_AUTHOR_STRIPPED": sanitize(appinfo["author"].replace(" ", "")),
-        "NEUTRON_AUTHOR": sanitize(appinfo["author"], replace_spaces = False),
+        "NEUTRON_AUTHOR_STRIPPED": appinfo["author"].replace(" ", ""),
+        "NEUTRON_AUTHOR": appinfo["author"],
         "NEUTRON_PROJECT_DESCRIPTION": appinfo["projectDescription"],
         "NEUTRON_CURRENT_DATE": datetime.now().strftime("%Y-%m-%d"),
     }
-
-    print(placeholders)
 
     if appinfo["openInDefaultBrowser"]:
         placeholder_files.append("src/open-in-default-browser/open-in-default-browser-ext/extension/replaceLinks.js")
