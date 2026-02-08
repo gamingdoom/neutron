@@ -104,7 +104,7 @@ jobs:
           sudo rm -rf /opt/hostedtoolcache/node
 
           # Create extra swap
-          sudo dd if=/dev/zero of=/swapfile_ bs=1024 count=8388608
+          sudo dd if=/dev/zero of=/swapfile_ bs=1024 count=10485760
           sudo mkswap /swapfile_
           sudo chmod 600 /swapfile_
           sudo swapon /swapfile_
@@ -118,7 +118,7 @@ jobs:
           # Install deps
           rustup target add ${{ matrix.toolchain-name }}
 
-          sudo apt install alsa pkg-config libssl-dev debhelper
+          sudo apt install alsa pkg-config libssl-dev debhelper libappindicator3-1
 
           if [ "${{ matrix.name }}" = "linux-aarch64" ]; then
             sudo apt install gcc-aarch64-linux-gnu
@@ -131,7 +131,7 @@ jobs:
           fi
 
           if [ "${{ matrix.name }}" = "windows-x86_64" ]; then
-            sudo apt binutils-mingw-w64-x86-64 gcc-mingw-w64-x86-64-posix g++-mingw-w64-x86-64-posix msitools
+            sudo apt install binutils-mingw-w64-x86-64 gcc-mingw-w64-x86-64-posix g++-mingw-w64-x86-64-posix msitools
           fi
 
           sudo apt-get clean

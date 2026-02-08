@@ -1,0 +1,11 @@
+--- a/python/mozbuild/mozbuild/repackaging/deb.py
++++ b/python/mozbuild/mozbuild/repackaging/deb.py
+@@ -117,7 +117,7 @@
+             exclude_file_names=["package-prefs.js"],
+         )
+ 
+-        app_name = application_ini_data["name"]
++        app_name = application_ini_data["remoting_name"]
+         with open(
+             mozpath.join(source_dir, app_name.lower(), "is-packaged-app"), "w"
+         ) as f:
