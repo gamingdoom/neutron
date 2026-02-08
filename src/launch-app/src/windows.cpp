@@ -35,6 +35,8 @@ Config platform_specific::get_config(){
     
     // create it if it doesn't exist
     if (!std::filesystem::exists(configPath)) {
+        std::filesystem::create_directories(configPath.parent_path());
+        
         std::ofstream configFile(configPath);
         configFile << "run_in_background=";
 
